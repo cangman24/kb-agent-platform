@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """tests/test_memory.py —— 三层记忆 + 上下文压缩单测。全部离线。"""
-import json
 import os
 import sys
 import unittest
@@ -8,7 +7,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.memory import (  # noqa: E402
-    CompressionResult, ContextCompressor, EpisodicMemory, LayeredMemory,
+    ContextCompressor, EpisodicMemory, LayeredMemory,
     Message, Turn, UserProfile, WorkingMemory, truncate_tool_result,
 )
 
@@ -31,7 +30,8 @@ class FakeVectorStore:
     def query(self, embedding, top_k: int = 3):
         scored = []
         for row in self.rows:
-            dot = sum(a * b for a, b in zip(embedding, row["vec"]))
+            # strict=False：桩要容忍维度不等的脏输入，按可比对部分求内积
+            dot = sum(a * b for a, b in zip(embedding, row["vec"], strict=False))
             scored.append((row["id"], dot))
         scored.sort(key=lambda kv: -kv[1])
         return scored[:top_k]

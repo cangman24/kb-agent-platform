@@ -35,7 +35,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.agent import (  # noqa: E402
-    AgentRun, AgentState, EventType, InMemoryCheckpointer, JsonFileCheckpointer,
+    EventType, InMemoryCheckpointer, JsonFileCheckpointer,
 )
 from core.agent_langgraph import (  # noqa: E402
     LangGraphAgentEngine, langgraph_available, make_agent_engine,
@@ -581,7 +581,6 @@ class TestFactory(unittest.TestCase):
 
     def test_factory_returns_engine_with_same_api(self):
         """★ 两版引擎的公开 API 必须一致 —— 业务代码才能无感切换。"""
-        from core.agent import AgentEngine
         eng = make_agent_engine(
             prefer_langgraph=False, registry=make_registry(),
             intent_fn=lambda q: "spec_inquiry", plan_fn=lambda q, t: [],

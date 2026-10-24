@@ -28,7 +28,7 @@ from core.retrieval import recursive_chunk
 from core.memory import ContextCompressor, LayeredMemory, Message
 from core.mcp import ToolRegistry
 from kb_agent.decisions import ToolCallingDecider
-from kb_agent.prompts import MessageBuilder, messages_token_estimate
+from kb_agent.prompts import MessageBuilder
 
 # --------------------------------------------------------------------- 路由表
 # ★ 意图 -> 工具白名单。这是"权限收敛"的唯一定义处，不在别处硬编码工具名。
@@ -200,7 +200,7 @@ def build_ablation_engine(
     if use_tools:
         route_table = kw.pop("route_table", None) or DEFAULT_ROUTE_TABLE
     else:
-        route_table = {k: () for k in DEFAULT_ROUTE_TABLE}
+        route_table = dict.fromkeys(DEFAULT_ROUTE_TABLE, ())
 
     # 记忆开关：关掉时注入一个"永远返回空"的 provider
     memory = kw.pop("memory", None)
@@ -282,15 +282,10 @@ def build_registry_from_index(index: Any, metrics_fn: Optional[Callable] = None
         metric_query  —— 仅 metric_report / full_review
       这样"意图决定能调什么"就是结构性保证，而不是靠提示词约束。
     """
-    from core.bm25 import BM25Index
 
-    docs: Dict[str, str] = {}
     lookup: Callable[[str], str] = lambda _c: ""  # noqa: E731
     if hasattr(index, "child_text"):
-        docs = {c.chunk_id: c.text for c in index.chunks}
         lookup = index.doc_text
-    elif hasattr(index, "chunks"):
-        docs = {c.chunk_id: c.text for c in index.chunks}
 
     reg = ToolRegistry()
 

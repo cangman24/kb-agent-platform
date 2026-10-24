@@ -49,6 +49,9 @@ data/cache/
 
 # 检查点：运行时产物
 data/checkpoints/
+# demo 运行时产物（跑一次 demo / CLI 就重新生成，且与机器相关）
+**/demo_checkpoints/
+
 data/demo_checkpoints/
 
 # demo 自动生成的临时语料（可由 demo 脚本重建）
@@ -81,3 +84,6 @@ reports/ingest_manifest.json
 
 # 临时提交信息文件（提交后即删，避免误入库）
 _commit*.txt
+
+# demo 演示报告（可重新生成）
+**/demos/reports/

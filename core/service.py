@@ -20,9 +20,9 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence
 
-from .agent import AgentRun, AgentState, EventType, make_event
+from .agent import AgentRun, EventType
 from .llm import REFUSAL_MARKER, build_answer_messages, is_refusal, should_refuse
-from .sse import SSEStream, format_sse
+from .sse import SSEStream
 
 
 # --------------------------------------------------------------------- 配置
@@ -395,18 +395,6 @@ class AgentService:
             return cp.load(thread_id)
         except Exception:  # noqa: BLE001 - 审计查询不该因为单点故障而失败
             return None
-        return {
-            "thread_id": thread_id,
-            "found": True,
-            "task_type": run.state.task_type,
-            "allowed_tools": run.state.allowed_tools,
-            "plan": run.state.plan,
-            "rounds": run.state.rounds,
-            "tool_calls": run.state.tool_calls,
-            "stop_reason": run.state.stop_reason,
-            "scratchpad": run.state.scratchpad,
-            "events": run.events,
-        }
 
     def tools(self) -> Dict[str, Any]:
         """列出注册的工具与白名单路由表（前端/调试用）。"""

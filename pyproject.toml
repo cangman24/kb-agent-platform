@@ -88,14 +88,24 @@ target-version = "py310"
 exclude = ["data", "reports", ".git"]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "UP", "B", "C4"]
+# ★ 只保留"能指出真实缺陷"的规则，不收纯风格类：
+#   · 不收 UP（pyupgrade）：本项目显式声明 requires-python >=3.10，但刻意
+#     保留 typing.Dict/List/Optional 写法 —— 批量改写成 PEP 585/604 会产生
+#     数百行与功能无关的 diff，收益低于风险。
+#   · 不收 I（导入排序）：纯风格。真要统一时一次性 `ruff check --select I --fix`
+#     即可，不该让每次提交都被它卡住。
+select = ["E", "F", "W", "B", "C4"]
 ignore = [
     "E501",   # 行长由 formatter 处理，中文注释难对齐
     "B008",   # 允许函数默认值里调用（本项目大量用 dataclass field 与注入）
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["B011"]          # 测试里允许 assert False 之类
+# 测试里 assert False / assertRaises(Exception) / 单字母变量名 / lambda 赋值
+# 都是有意为之的测试写法，不是缺陷
+"tests/*" = ["B011", "B017", "E741", "E742", "E731", "F841", "B009"]
+# demo 需要先 sys.path.insert 再导入 core，E402 是必需的写法
+"demos/*" = ["E402"]
 
 [tool.mypy]
 python_version = "3.10"

@@ -26,6 +26,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# ★ Windows runner 上 Python 的 stdout 默认用 cp1252，打印中文会直接
+#   UnicodeEncodeError 挂掉整个 step。设 UTF-8 是最省事且无害的解法。
+env:
+  PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
+
 jobs:
   # ============================================================ 主测试
   test:
