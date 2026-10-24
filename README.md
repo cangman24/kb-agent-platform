@@ -1,5 +1,7 @@
 # KB Agent Platform
 
+![CI](https://github.com/cangman24/kb-agent-platform/actions/workflows/ci.yml/badge.svg) ![python](https://img.shields.io/badge/python-%3E%3D3.10-blue) ![tests](https://img.shields.io/badge/tests-353%20passing-brightgreen) ![deps](https://img.shields.io/badge/test%20deps-0-brightgreen) ![license](https://img.shields.io/badge/license-MIT-blue)
+
 一个**可控**的知识库 Agent：给大模型接上工具之后，把它关进一套工程约束里 ——
 路由白名单决定"能调什么"，熔断决定"最多跑几轮"，Checkpoint 决定"中断后怎么续"，
 事件流决定"每一步都看得见"。
