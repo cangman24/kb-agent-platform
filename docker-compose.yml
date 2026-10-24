@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# docker-compose.yml —— 本地一键起服务
+#
+#   cp .env.example .env   # 填入 DEEPSEEK_API_KEY
+#   docker compose up -d
+#   curl http://localhost:8000/health
+#
+# ★ 本仓库不需要向量数据库：内置知识库走 BM25。
+#   真机要换向量检索时，把 embed_fn 接进 build_registry_from_index 即可，
+#   编排与管控逻辑一行都不用改。
+# ---------------------------------------------------------------------------
+services:
+  agent:
+    build: .
+    image: kb-agent-platform:latest
+    container_name: kb-agent
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      KB_DIR: data/kb
+      KB_MAX_ROUNDS: "6"
+      KB_MAX_TOOL_CALLS: "12"
+    volumes:
+      # checkpoint 与 LLM 缓存落盘，容器重启不丢
+      - ./data/checkpoints:/app/data/checkpoints
+      - ./data/cache:/app/data/cache
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

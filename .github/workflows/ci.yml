@@ -1,0 +1,155 @@
+# ---------------------------------------------------------------------------
+# GitHub Actions —— 持续集成
+#
+# ★ 这个 workflow 的核心卖点是**它跑得极快**，而这个快是有设计依据的：
+#
+#   core/ 12 个模块全部零第三方依赖，345 项单测约 1 秒跑完。
+#   所以 CI 里**不需要装任何包**、不需要 API Key、不需要开数据库服务，
+#   整个 job 通常 30 秒内结束。
+#
+#   这不是"省 CI 分钟数"的小聪明，而是一个可验证的架构主张：
+#   **Agent 的编排与管控逻辑，跟"用哪个模型"是解耦的。**
+#
+#   代价也说清楚：openai SDK / fastapi 的**真实行为**不在 CI 覆盖范围内，
+#   必须在本机验证（见 README 的"未验证项"）。
+# ---------------------------------------------------------------------------
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================ 主测试
+  test:
+    name: 离线单测（${{ matrix.os }} / py${{ matrix.python-version }}）
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # ★ 故意什么都不装。
+      #   如果测试需要第三方包才能过，说明核心逻辑被外部依赖污染了 ——
+      #   这一步就是在守护那条架构边界。
+      - name: 确认零依赖即可测试
+        run: python -m unittest discover -s tests -v
+
+      - name: 分模块跑（定位失败更快）
+        run: |
+          python -m unittest tests.test_core tests.test_service -v
+          python -m unittest tests.test_agent tests.test_memory tests.test_decisions -v
+          python -m unittest tests.test_agent_eval tests.test_agent_langgraph -v
+        shell: bash
+
+      - name: 语法全库扫描
+        run: |
+          python - <<'PY'
+          import io, os, sys
+          bad = 0
+          for dp, dn, fn in os.walk('.'):
+              dn[:] = [d for d in dn if d not in
+                       ('__pycache__', '.git', 'data', 'reports')]
+              for n in fn:
+                  if n.endswith('.py'):
+                      p = os.path.join(dp, n)
+                      try:
+                          compile(io.open(p, encoding='utf-8').read(), p, 'exec')
+                      except SyntaxError as e:
+                          bad += 1
+                          print(f'{p}:{e.lineno}: {e.msg}')
+          print('语法错误文件数:', bad)
+          sys.exit(1 if bad else 0)
+          PY
+        shell: bash
+
+  # ============================================================ demo 与 CLI
+  smoke:
+    name: demo 与 CLI 冒烟
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 逐个运行离线 demo
+        run: |
+          set -e
+          for d in demo_agent demo_agent2 demo_agenteval; do
+            printf "  %-18s " "$d"
+            python "demos/$d.py" > /dev/null
+            echo "OK"
+          done
+
+      # ★ CLI 的离线模式必须能在**没有 API Key**的机器上跑通 ——
+      #   这是"编排逻辑不依赖模型"的端到端证据。
+      - name: CLI 离线模式必须可用（无需 API Key）
+        run: |
+          set -e
+          python -m kb_agent.cli --offline --tools
+          python -m kb_agent.cli --offline "查一下工单复核流程"
+
+      - name: 内置知识库必须可建索引
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, '.')
+          from kb_agent.app import build_kb_index
+          idx = build_kb_index()
+          assert len(idx.chunks) > 0, '内置语料为空'
+          print(f'✓ 内置知识库 {len(idx.chunks)} 个块，工单 {len(idx.tickets)} 条')
+          PY
+
+  # ============================================================ 静态检查
+  lint:
+    name: ruff 静态检查
+    runs-on: ubuntu-latest
+    continue-on-error: true     # 不阻断主流程；先让它可见，再逐步收紧
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: pip install ruff
+      - run: ruff check . --output-format=github
+
+  # ============================================================ 密钥防护
+  secret-guard:
+    name: 密钥防护（.env 绝不能进版本库）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # 需要全量历史才能扫"曾经提交过"
+
+      # ★ 这条防的是"提交过又被删掉"的情况：
+      #   镜像层与 git 历史一样不可变，删掉的文件仍在历史里可被 pull 出来。
+      - name: 全量历史扫描 .env 与硬编码密钥
+        run: |
+          set -e
+          if git log --all --name-only --pretty=format: | grep -qx '\.env'; then
+            echo "✗ .env 曾出现在提交历史中，必须立刻轮换 Key 并清理历史"
+            exit 1
+          fi
+          echo "✓ .env 从未被提交"
+          if git grep -nE 'sk-[A-Za-z0-9]{20,}' -- . ':!*.example' ':!.github' ; then
+            echo "✗ 发现疑似硬编码 API Key"
+            exit 1
+          fi
+          echo "✓ 未发现硬编码密钥"

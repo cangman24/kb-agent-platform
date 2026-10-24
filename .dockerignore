@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------------------
+# .dockerignore —— 不该进镜像的内容
+#
+# ★ 两条硬规则：
+#   1. .env 绝不进镜像：镜像层不可变，泄露的 Key 即使后面删掉也能被 pull 出来
+#   2. 运行时产物不进镜像：checkpoint / cache / 报告会让镜像随使用不断膨胀
+# ---------------------------------------------------------------------------
+.git
+.github
+.gitignore
+
+# 密钥
+.env
+.env.*
+!.env.example
+
+# Python 运行时产物
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 运行时数据（通过 volume 挂载，不打包进镜像）
+data/checkpoints/
+data/cache/
+reports/
+tests/
+
+# 文档与开发脚手架
+docs/
+*.md
+!README.md
+Makefile
