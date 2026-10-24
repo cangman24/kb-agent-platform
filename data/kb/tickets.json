@@ -1,0 +1,29 @@
+{
+  "T-100": {
+    "ticket_id": "T-100",
+    "level": "高风险",
+    "status": "closed",
+    "reviewed_by": null,
+    "evidence": "缺失",
+    "closed_at": "2026-10-14T21:12:00+08:00",
+    "note": "未经复核直接关闭"
+  },
+  "T-200": {
+    "ticket_id": "T-200",
+    "level": "高风险",
+    "status": "closed",
+    "reviewed_by": "张三",
+    "evidence": "完整",
+    "closed_at": "2026-10-15T10:30:00+08:00",
+    "note": "复核通过后关闭"
+  },
+  "T-300": {
+    "ticket_id": "T-300",
+    "level": "中风险",
+    "status": "processing",
+    "reviewed_by": null,
+    "evidence": "部分",
+    "closed_at": null,
+    "note": "处置中，等待补充回滚方案"
+  }
+}
