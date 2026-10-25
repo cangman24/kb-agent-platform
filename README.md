@@ -12,7 +12,7 @@
 
 ```
 pip install -e .                        # 最小安装（什么都不装也能跑）
-python -m unittest discover -s tests    # 353 项单测，纯标准库，CI 单个测试 job 约 6 秒
+python -m unittest discover -s tests    # 365 项单测；纯标准库可跑，CI 零依赖环境自动跳过 12 项 LangGraph 真库测试
 python -m kb_agent.cli --offline "查一下工单复核流程"   # 无需 API Key
 ```
 
@@ -79,7 +79,7 @@ kb_agent/                  应用层装配
 
 demos/                     离线 demo（脚本化决策，无需 Key）
 demos/live/                真机 demo（需要 Key 与网络）
-tests/                     353 项零依赖单测
+tests/                     365 项单测（12 项 LangGraph 真库测试，无依赖环境自动跳过）
 ```
 
 **分层原则**：业务逻辑在 `core/`（可离线验证），装配在 `kb_agent/`，
@@ -102,6 +102,8 @@ tests/                     353 项零依赖单测
 | 缓存 | 同参数第二次调用命中缓存，**不发起网络请求** | `test_cache_hit_skips_transport` |
 | 上下文压缩 | 三级压缩（工具截断 → 早期摘要 → 全量归档），摘要失败会降级不留空 | `TestContextCompressor` |
 | 越权审计 | `send_mail` 被标记敏感，且在默认路由表中不开放 | `python -m kb_agent.cli --offline --tools` |
+| LangGraph 双引擎 | 同一套业务逻辑可跑自实现状态机或真 `StateGraph`，接口一致、行为一致 | `TestRealLangGraph`（12 项，真机 langgraph 0.2.28 实测） |
+| 多智能体拓扑 | supervisor 派活 + worker 编译子图 + verifier 汇总，Mermaid 拓扑可导出 | `demos/live/demo_langgraph_supervisor.py` |
 
 ---
 
