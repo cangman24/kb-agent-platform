@@ -3,9 +3,9 @@
 #
 # ★ 这个 workflow 的核心卖点是**它跑得极快**，而这个快是有设计依据的：
 #
-#   core/ 12 个模块全部零第三方依赖，345 项单测约 1 秒跑完。
+#   core/ 12 个模块全部零第三方依赖，353 项单测在 CI 上约 6 秒跑完。
 #   所以 CI 里**不需要装任何包**、不需要 API Key、不需要开数据库服务，
-#   整个 job 通常 30 秒内结束。
+#   ubuntu job 通常 10 秒内结束（Windows runner 约 1 分钟）。
 #
 #   这不是"省 CI 分钟数"的小聪明，而是一个可验证的架构主张：
 #   **Agent 的编排与管控逻辑，跟"用哪个模型"是解耦的。**
@@ -40,13 +40,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        # ubuntu 固定 24.04：GitHub 已宣布 ubuntu-latest 将迁移到 Ubuntu 26
+        # （2026-10-19 起），固定版本号保证 CI 环境不会静默漂移。
+        os: [ubuntu-24.04, windows-latest]
         python-version: ["3.10", "3.11"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -87,10 +89,10 @@ jobs:
   # ============================================================ demo 与 CLI
   smoke:
     name: demo 与 CLI 冒烟
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.10"
 
@@ -125,22 +127,26 @@ jobs:
   # ============================================================ 静态检查
   lint:
     name: ruff 静态检查
-    runs-on: ubuntu-latest
-    continue-on-error: true     # 不阻断主流程；先让它可见，再逐步收紧
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.10"
-      - run: pip install ruff
+      # ★ ruff 版本必须固定：不固定的话，官方某次发版新增的检查项会让一个
+      #   「没人改过的仓库」突然变红——这种红与代码质量无关，只是噪音。
+      #   升级应该是主动动作（改这一行 + 本地先跑一遍），而不是被动惊喜。
+      - run: pip install ruff==0.17.2
+      # ★ 这里故意不用 continue-on-error：lint 失败就必须让整个 run 红。
+      #   被掩盖的红比红本身更糟——它让"CI 全绿"变成一句不可信的话。
       - run: ruff check . --output-format=github
 
   # ============================================================ 密钥防护
   secret-guard:
     name: 密钥防护（.env 绝不能进版本库）
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0        # 需要全量历史才能扫"曾经提交过"
 

@@ -12,7 +12,7 @@
 
 ```
 pip install -e .                        # 最小安装（什么都不装也能跑）
-python -m unittest discover -s tests    # 353 项单测，约 1 秒，不需要任何包
+python -m unittest discover -s tests    # 353 项单测，纯标准库，CI 单个测试 job 约 6 秒
 python -m kb_agent.cli --offline "查一下工单复核流程"   # 无需 API Key
 ```
 
@@ -119,7 +119,7 @@ tests/                     353 项零依赖单测
 ## 工程化
 
 - **依赖分层**：`pip install -e .` 装什么都不装也能跑；`[llm]` `[serve]` `[dev]` 按需
-- **CI**：4 个 job（跨平台单测 / demo 与 CLI 冒烟 / ruff / 密钥防护），30 秒内结束
+- **CI**：4 类 job（跨平台单测 / demo 与 CLI 冒烟 / ruff / 密钥防护），ubuntu 约 10 秒内、Windows 约 1 分钟内结束
 - **密钥防护**：CI 扫描**全部 git 历史**，`.env` 一旦提交过就报红（镜像层与历史都不可变）
 - **元测试**：`tests/test_engineering_config.py` 守护配置文件自身不腐烂
   （Makefile 引用的 demo 存在、demo 的 `sys.path` 指向仓库根、源码不出现 CRLF）
