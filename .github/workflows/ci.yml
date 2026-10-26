@@ -62,7 +62,7 @@ jobs:
         run: |
           python -m unittest tests.test_core tests.test_service -v
           python -m unittest tests.test_agent tests.test_memory tests.test_decisions -v
-          python -m unittest tests.test_agent_eval tests.test_agent_langgraph -v
+          python -m unittest tests.test_agent_eval tests.test_agent_langgraph tests.test_agent_stream -v
           python -m unittest tests.test_mcp_server tests.test_mcp_client -v
           python -m unittest tests.test_doc_vision tests.test_doc_vision_pdf -v
         shell: bash
@@ -101,7 +101,7 @@ jobs:
       - name: 逐个运行离线 demo
         run: |
           set -e
-          for d in demo_agent demo_agent2 demo_agenteval demo_mcp demo_doc_vision; do
+          for d in demo_agent demo_agent2 demo_agenteval demo_mcp demo_doc_vision demo_agent_trace; do
             printf "  %-18s " "$d"
             python "demos/$d.py" > /dev/null
             echo "OK"
