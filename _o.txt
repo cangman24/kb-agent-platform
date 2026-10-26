@@ -1,0 +1,357 @@
+.............................................................................................E:\lfs\求职\_split\kb-agent-platform\core\agent_eval.py:87: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\.tmp\\83466c4bc991\\t.json' mode='r' encoding='utf-8'>
+  text = open(path, "r", encoding="utf-8").read().strip()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..E:\lfs\求职\_split\kb-agent-platform\core\agent_eval.py:87: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\.tmp\\b75238818b15\\tasks.jsonl' mode='r' encoding='utf-8'>
+  text = open(path, "r", encoding="utf-8").read().strip()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.............................E:\lfs\求职\_split\kb-agent-platform\tests\test_agent_eval.py:342: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\.tmp\\630adda26438\\sub\\agent.md' mode='r' encoding='utf-8'>
+  content = open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..............................ssssssssssss.......................................................ss................................................................................................................................sss...ssssssssssE:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\agent.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\agent_eval.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\agent_langgraph.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\bm25.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\doc_vision.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\doc_vision_tools.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\llm.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\mcp.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\mcp_client.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\mcp_server.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\memory.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\metrics.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\observability.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\retrieval.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\service.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\sse.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\store.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\text.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\core\\__init__.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agent.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agent2.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agenteval.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agent_trace.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_doc_vision.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_mcp.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\demo_agent_eval_real.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\demo_agent_real.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\demo_langgraph_supervisor.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\smoke_real_agent.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\agent_api.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\api_fastapi.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\app.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\cli.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\decisions.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\mcp_cli.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\prompts.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\server.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\kb_agent\\__init__.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_eval.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_langgraph.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_spans.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_stream.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_core.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_decisions.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_doc_vision.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_doc_vision_pdf.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_engineering_config.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_llm_stream.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_mcp_client.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_mcp_server.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_memory.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_observability.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_service.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_service_stream_tokens.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_store.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tools\\make_demo_pdf.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:102: ResourceWarning: unclosed file <_io.BufferedReader name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tools\\serve_ui.py'>
+  if b"\r\n" in io.open(path, "rb").read():
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agent.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agent2.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agent_trace.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_agenteval.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_doc_vision.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\demo_mcp.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\demo_agent_eval_real.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\demo_agent_real.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\demo_langgraph_supervisor.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:47: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\demos\\live\\smoke_real_agent.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.....E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_eval.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_langgraph.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_spans.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_stream.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_core.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_decisions.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_doc_vision.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_doc_vision_pdf.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_engineering_config.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_llm_stream.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_mcp_client.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_mcp_server.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_memory.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_observability.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_service.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_service_stream_tokens.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:76: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_store.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_eval.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_langgraph.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_spans.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_agent_stream.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_core.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_decisions.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_doc_vision.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_doc_vision_pdf.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py:89: ResourceWarning: unclosed file <_io.TextIOWrapper name='E:\\lfs\\求职\\_split\\kb-agent-platform\\tests\\test_llm_stream.py' mode='r' encoding='utf-8'>
+  src = io.open(path, encoding="utf-8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F..........................E:\lfs\求职\_split\kb-agent-platform\core\mcp_client.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=6 encoding='utf-8'>
+  self._proc = None
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...E:\lfs\求职\_split\kb-agent-platform\core\mcp_client.py:187: ResourceWarning: unclosed file <_io.TextIOWrapper name=4 encoding='utf-8'>
+  self._proc = None
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...........................................................................................................FE......E..................
+======================================================================
+ERROR: test_trace_marks_memory_source (test_service.TestAgentService.test_trace_marks_memory_source)
+同进程内查轨迹：来源必须是 memory，且带完整事件流。
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\lfs\求职\_split\kb-agent-platform\tests\test_service.py", line 107, in test_trace_marks_memory_source
+    self.assertEqual(tr["source"], "memory")
+                     ~~^^^^^^^^^^
+KeyError: 'source'
+
+======================================================================
+ERROR: test_service_stream_tokens (unittest.loader._FailedTest.test_service_stream_tokens)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_service_stream_tokens
+Traceback (most recent call last):
+  File "C:\Users\jdy203205\.workbuddy\binaries\python\versions\3.13.12\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "C:\Users\jdy203205\.workbuddy\binaries\python\versions\3.13.12\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "E:\lfs\求职\_split\kb-agent-platform\tests\test_service_stream_tokens.py", line 26, in <module>
+    from test_service import (  # noqa: E402
+        FakeLLM, make_rag,
+    )
+ImportError: cannot import name 'FakeLLM' from 'test_service' (E:\lfs\求职\_split\kb-agent-platform\tests\test_service.py)
+
+
+======================================================================
+FAIL: test_tests_never_require_api_key (test_engineering_config.TestTestsAreOffline.test_tests_never_require_api_key)
+测试不允许依赖真实 API Key —— 否则 CI 必红。
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\lfs\求职\_split\kb-agent-platform\tests\test_engineering_config.py", line 90, in test_tests_never_require_api_key
+    self.assertNotIn("DEEPSEEK_API_KEY", src,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{os.path.basename(path)} 引用了真实 API Key")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'DEEPSEEK_API_KEY' unexpectedly found in '# -*- coding: utf-8 -*-\n"""LLM 流式（token 级）契约测试。\n\n锁死四条不变量，每条都对应一个真实取舍：\n  1. 只有真流式能力（stream_transport / 真 SDK + key）才 can_stream=True，\n     注入整段式 fake transport 时必须为 False —— 否则"假流式"会被冒烟测成真；\n  2. 增量顺序拼起来 == 完整答案，done 帧带 usage 与首字延迟；\n  3. **已吐出 token 后不重试**（重试会让用户看到答案重头再来）；\n  4. 不读缓存只写缓存（缓存命中就意味着没有 token 可流）。\n"""\nfrom __future__ import annotations\n\nimport os\nimport tempfile\nimport unittest\nfrom unittest import mock\n\nfrom core.llm import (\n    DiskCache, LLMClient, LLMDelta, LLMError, NonRetryableError, RetryableError,\n)\n\n\n# ------------------------------------------------------------------ 夹具\ndef chunk(text=None, **usage):\n    """造一个 OpenAI 兼容 chunk。text=None 表示"只有 usage 的收尾帧"。"""\n    raw = {"choices": [], "model": "deepseek-chat"}\n    if text is not None:\n        raw["choices"] = [{"index": 0, "delta": {"content": text}}]\n    if usage:\n        raw["usage"] = usage\n    return raw\n\n\ndef stream_of(parts, usage=None, model="deepseek-chat"):\n    """把若干文本片段变成 chunk 序列，末尾补 usage 帧。"""\n    out = [chunk(p) for p in parts]\n    if usage:\n        out.append(chunk(None, **usage))\n    return out\n\n\nclass _Boom(Exception):\n    status_code = 429\n\n\nclass StreamingClientTest(unittest.TestCase):\n    """用注入的 stream_transport 离线验证 —— 不需要网络与 API Key。"""\n\n    def make(self, chunks, **kw):\n        calls = {"n": 0}\n\n        def transport(**kwargs):\n            calls["n"] += 1\n            for c in chunks:\n                if isinstance(c, BaseException):\n                    raise c\n                yield c\n\n        kw.setdefault("rate", None)\n        client = LLMClient(api_key="x", stream_transport=transport,\n                           sleep=lambda _s: None,\n                           base_delay=0, jitter=False, **kw)\n        return client, calls\n\n    # -------------------------------------------------------------- 能力\n    def test_injected_stream_transport_means_can_stream(self):\n        c, _ = self.make(stream_of(["a"]))\n        self.assertTrue(c.can_stream())\n\n    def test_plain_transport_cannot_stream(self):\n        """★ 关键断言：整段式 fake transport 不能被当成流式能力。"""\n        c = LLMClient(api_key="x", transport=lambda **kw: {}, rate=None)\n        self.assertFalse(c.can_stream())\n\n    def test_no_key_no_sdk_cannot_stream(self):\n        # 环境里可能真的有 DEEPSEEK_API_KEY（本机 .env / shell），\n        # 不清掉的话这条断言会因为环境不同而假绿/假红\n        with mock.patch.dict(os.environ, {"DEEPSEEK_API_KEY": ""}):\n            c = LLMClient(api_key="", rate=None)\n        self.assertFalse(c.can_stream())\n\n    # -------------------------------------------------------------- 增量\n    def test_deltas_concatenate_to_full_text(self):\n        c, calls = self.make(stream_of(["知识", "库中", "有答案"],\n                                       usage={"prompt_tokens": 11,\n                                              "completion_tokens": 3}))\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual("".join(d.text for d in deltas), "知识库中有答案")\n        self.assertEqual(calls["n"], 1)\n\n    def test_done_frame_carries_usage_and_full_text(self):\n        c, _ = self.make(stream_of(["ab", "cd"],\n                                   usage={"prompt_tokens": 7,\n                                          "completion_tokens": 2}))\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        last = deltas[-1]\n        self.assertTrue(last.done)\n        self.assertEqual(last.prompt_tokens, 7)\n        self.assertEqual(last.completion_tokens, 2)\n        # done 帧带全文，调用方不必自己拼（也便于落库）\n        self.assertEqual(last.full_text, "abcd")\n        self.assertEqual(last.text, "")\n        self.assertEqual(c.usage["stream_calls"], 1)\n\n    def test_content_frames_are_not_done(self):\n        c, _ = self.make(stream_of(["a", "b"]))\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual([d.done for d in deltas], [False, False, True])\n\n    def test_first_token_latency_only_on_first_content(self):\n        c, _ = self.make(stream_of(["x", "y", "z"]))\n        deltas = [d for d in c.chat_stream([{"role": "user", "content": "q"}])\n                  if d.text and not d.done]\n        firsts = [d.first_token_ms for d in deltas]\n        self.assertIsNotNone(firsts[0])\n        # 后续帧沿用同一个首字延迟（整轮一个数，方便面板显示）\n        self.assertTrue(all(f == firsts[0] for f in firsts))\n\n    def test_usage_only_frame_does_not_lose_text(self):\n        """收尾帧 choices 为空但有 usage，不能把它当"空答案"处理。"""\n        c, _ = self.make([chunk("答"), chunk(None, prompt_tokens=3,\n                                            completion_tokens=1)])\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual("".join(d.text for d in deltas), "答")\n        self.assertEqual(deltas[-1].prompt_tokens, 3)\n\n    def test_message_shaped_chunk_is_tolerated(self):\n        """个别兼容实现把首块放成 message 而不是 delta。"""\n        c, _ = self.make([{"choices": [{"message": {"content": "整段"}}]}])\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual("".join(d.text for d in deltas), "整段")\n\n    # -------------------------------------------------------------- 重试\n    def test_retries_when_failure_before_any_token(self):\n        attempts = {"n": 0}\n\n        def transport(**kw):\n            attempts["n"] += 1\n            if attempts["n"] == 1:\n                raise _Boom("429")\n            for c in stream_of(["ok"]):\n                yield c\n\n        c = LLMClient(api_key="x", stream_transport=transport, rate=None,\n                      sleep=lambda _s: None, base_delay=0, jitter=False)\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual("".join(d.text for d in deltas), "ok")\n        self.assertEqual(attempts["n"], 2)\n        self.assertEqual(c.usage["retries"], 1)\n\n    def test_no_retry_after_first_token(self):\n        """★ 核心：已经吐了 token 就绝不重试 —— 否则答案会重头再来一遍。"""\n        attempts = {"n": 0}\n\n        def transport(**kw):\n            attempts["n"] += 1\n            yield chunk("前半")\n            raise _Boom("429 后断开")\n\n        c = LLMClient(api_key="x", stream_transport=transport, rate=None,\n                      sleep=lambda _s: None, base_delay=0, jitter=False,\n                      max_retries=3)\n        got = []\n        with self.assertRaises(RetryableError):\n            for d in c.chat_stream([{"role": "user", "content": "q"}]):\n                got.append(d.text)\n        self.assertEqual(got, ["前半"])\n        self.assertEqual(attempts["n"], 1)\n\n    def test_non_retryable_before_token_raises_immediately(self):\n        class Bad(Exception):\n            status_code = 400\n\n        def transport(**kw):\n            raise Bad("bad request")\n            yield  # pragma: no cover\n\n        c = LLMClient(api_key="x", stream_transport=transport, rate=None,\n                      sleep=lambda _s: None, base_delay=0, jitter=False)\n        with self.assertRaises(NonRetryableError):\n            list(c.chat_stream([{"role": "user", "content": "q"}]))\n\n    def test_retries_exhausted_raises(self):\n        def transport(**kw):\n            raise _Boom("429 forever")\n            yield  # pragma: no cover\n\n        c = LLMClient(api_key="x", stream_transport=transport, rate=None,\n                      sleep=lambda _s: None, base_delay=0, jitter=False,\n                      max_retries=1)\n        with self.assertRaises(LLMError):\n            list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual(c.usage["retries"], 1)\n\n    # -------------------------------------------------------------- 缓存\n    def test_does_not_read_cache_but_writes_it(self):\n        """不读缓存（否则没有 token 可流），但要写缓存给非流式请求用。"""\n        tmp = tempfile.mkdtemp(prefix="llmstream-")\n        cache = DiskCache(tmp)\n        c, calls = self.make(stream_of(["缓存中的答案"]), cache=cache)\n\n        first = list(c.chat_stream([{"role": "user", "content": "同一条"}]))\n        self.assertEqual("".join(d.text for d in first), "缓存中的答案")\n        self.assertEqual(calls["n"], 1)\n\n        # 第二次必须**重新请求**（证明没读缓存）\n        second = list(c.chat_stream([{"role": "user", "content": "同一条"}]))\n        self.assertEqual("".join(d.text for d in second), "缓存中的答案")\n        self.assertEqual(calls["n"], 2)\n\n        # 但缓存里已经写进去了，非流式 chat() 应当命中\n        c2, _ = self.make([], cache=cache)\n        hit = c2.chat([{"role": "user", "content": "同一条"}])\n        self.assertTrue(hit.cached)\n        self.assertEqual(hit.text, "缓存中的答案")\n\n    def test_stream_call_does_not_increment_cached_counter(self):\n        c, _ = self.make(stream_of(["x"]))\n        list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual(c.usage["cached"], 0)\n\n    # -------------------------------------------------------------- 限流\n    def test_rate_limit_bucket_is_shared_with_chat(self):\n        """流式与整段式共用一个令牌桶（同一个客户端不该有两套限流）。"""\n        c, _ = self.make(stream_of(["x"]), rate=1.0)\n        self.assertIsNotNone(c.bucket)\n        self.assertEqual(c.bucket.rate, 1.0)\n        list(c.chat_stream([{"role": "user", "content": "q"}]))\n        # 流式调用确实从桶里取走了令牌（桶容量 1，刚取完必须取不到）\n        self.assertFalse(c.bucket.acquire(1.0, timeout=0))\n\n    # -------------------------------------------------------------- 其他\n    def test_empty_stream_still_yields_done(self):\n        c, _ = self.make([])\n        deltas = list(c.chat_stream([{"role": "user", "content": "q"}]))\n        self.assertEqual(len(deltas), 1)\n        self.assertTrue(deltas[0].done)\n        self.assertEqual(deltas[0].text, "")\n        self.assertEqual(deltas[0].full_text, "")\n\n    def test_parse_delta_tolerates_garbage(self):\n        self.assertEqual(LLMClient._parse_delta({}), ("", {}))\n        self.assertEqual(LLMClient._parse_delta({"choices": None}), ("", {}))\n        self.assertEqual(LLMClient._parse_delta({"choices": [None]}), ("", {}))\n\n    def test_stream_options_not_forced_when_disabled(self):\n        """构造时可传 stream_options=None 关掉，避免某些厂商 400。"""\n        seen = {}\n\n        def transport(**kw):\n            seen.update(kw)\n            yield chunk("x")\n\n        c = LLMClient(api_key="x", stream_transport=transport, rate=None)\n        list(c.chat_stream([{"role": "user", "content": "q"}],\n                           stream_options=None))\n        self.assertNotIn("stream_options", seen)\n\n\nclass DeltaDataclassTest(unittest.TestCase):\n    def test_defaults(self):\n        d = LLMDelta(text="a")\n        self.assertFalse(d.done)\n        self.assertEqual(d.prompt_tokens, 0)\n        self.assertIsNone(d.first_token_ms)\n\n\nif __name__ == "__main__":\n    unittest.main()\n' : test_llm_stream.py 引用了真实 API Key
+
+======================================================================
+FAIL: test_trace_falls_back_to_checkpoint (test_service.TestAgentService.test_trace_falls_back_to_checkpoint)
+★ 换一个服务实例（模拟进程重启）仍要能查到这次执行的状态。
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\lfs\求职\_split\kb-agent-platform\tests\test_service.py", line 118, in test_trace_falls_back_to_checkpoint
+    self.assertTrue(tr["found"])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 538 tests in 2.606s
+
+FAILED (failures=2, errors=2, skipped=27)
