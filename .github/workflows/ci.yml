@@ -63,6 +63,8 @@ jobs:
           python -m unittest tests.test_core tests.test_service -v
           python -m unittest tests.test_agent tests.test_memory tests.test_decisions -v
           python -m unittest tests.test_agent_eval tests.test_agent_langgraph -v
+          python -m unittest tests.test_mcp_server tests.test_mcp_client -v
+          python -m unittest tests.test_doc_vision tests.test_doc_vision_pdf -v
         shell: bash
 
       - name: 语法全库扫描
