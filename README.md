@@ -1,6 +1,6 @@
 # KB Agent Platform
 
-![CI](https://github.com/cangman24/kb-agent-platform/actions/workflows/ci.yml/badge.svg) ![python](https://img.shields.io/badge/python-%3E%3D3.10-blue) ![tests](https://img.shields.io/badge/tests-381%20passing-brightgreen) ![deps](https://img.shields.io/badge/test%20deps-0-brightgreen) ![license](https://img.shields.io/badge/license-MIT-blue)
+![CI](https://github.com/cangman24/kb-agent-platform/actions/workflows/ci.yml/badge.svg) ![python](https://img.shields.io/badge/python-%3E%3D3.10-blue) ![tests](https://img.shields.io/badge/tests-394%20passing-brightgreen) ![deps](https://img.shields.io/badge/test%20deps-0-brightgreen) ![license](https://img.shields.io/badge/license-MIT-blue)
 
 一个**可控**的知识库 Agent：给大模型接上工具之后，把它关进一套工程约束里 ——
 路由白名单决定"能调什么"，熔断决定"最多跑几轮"，Checkpoint 决定"中断后怎么续"，
@@ -12,7 +12,7 @@
 
 ```
 pip install -e .                        # 最小安装（什么都不装也能跑）
-python -m unittest discover -s tests    # 393 项单测；纯标准库可跑，CI 零依赖环境自动跳过 12 项 LangGraph 真库测试
+python -m unittest discover -s tests    # 419 项单测；纯标准库可跑，CI 零依赖环境自动跳过 25 项（12 项 LangGraph 真库 + 10 项真 PDF + 3 项图表像素）
 python -m kb_agent.cli --offline "查一下工单复核流程"   # 无需 API Key
 ```
 
@@ -59,9 +59,11 @@ python -m kb_agent.server    # http://127.0.0.1:8000/docs
 ## 架构
 
 ```
-core/                      零第三方依赖的业务内核（12 个模块）
+core/                      零第三方依赖的业务内核（16 个模块，可选依赖全部懒导入）
 ├── agent.py               受控 Agent 引擎：熔断、循环检测、Checkpoint
 ├── mcp.py                 工具注册与 schema 生成（MCP 风格）
+├── doc_vision.py          文档版式分析：版面/表格重建/图表读数（纯算法，零依赖）
+├── doc_vision_tools.py    文档理解工具层：doc_analyze / doc_read_chart / doc_read_table
 ├── llm.py                 LLM 客户端：限流、缓存、错误分类、指数退避
 ├── service.py             服务层：收 dict 回 dict，框架无关
 ├── memory.py              三层记忆 + 上下文压缩（含降级摘要）
@@ -79,7 +81,8 @@ kb_agent/                  应用层装配
 
 demos/                     离线 demo（脚本化决策，无需 Key）
 demos/live/                真机 demo（需要 Key 与网络）
-tests/                     393 项单测（12 项 LangGraph 真库测试，无依赖环境自动跳过）
+tests/                     419 项单测（25 项需可选依赖，无依赖环境自动跳过）
+tools/                     make_demo_pdf.py：纯标准库生成带 ground truth 的迷你 PDF（测试 fixture）
 ```
 
 **分层原则**：业务逻辑在 `core/`（可离线验证），装配在 `kb_agent/`，
@@ -105,6 +108,7 @@ tests/                     393 项单测（12 项 LangGraph 真库测试，无�
 | LangGraph 双引擎 | 同一套业务逻辑可跑自实现状态机或真 `StateGraph`，接口一致、行为一致 | `TestRealLangGraph`（12 项，真机 langgraph 0.2.28 实测） |
 | 多智能体拓扑 | supervisor 派活 + worker 编译子图 + verifier 汇总，Mermaid 拓扑可导出 | `demos/live/demo_langgraph_supervisor.py` |
 | MCP 协议工具层 | 工具经 JSON-RPC 2.0 暴露（stdio + HTTP 双传输），客户端零 import 即可动态发现与调用；协议错误与工具失败分层处理 | `tests/test_mcp_server.py`，`demos/demo_mcp.py`（真子进程端到端） |
+| 多模态文档理解 | PDF 版面/表格/图表 -> 带 element_id 的结构化事实：表格按跨行对齐重建网格（可行列寻址），柱状图走矢量算子**精确**读数，Agent 答案带引用 | `tests/test_doc_vision_pdf.py`（对照 ground truth），`demos/demo_doc_vision.py`（14 项自检） |
 
 ---
 

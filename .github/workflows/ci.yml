@@ -99,7 +99,7 @@ jobs:
       - name: 逐个运行离线 demo
         run: |
           set -e
-          for d in demo_agent demo_agent2 demo_agenteval demo_mcp; do
+          for d in demo_agent demo_agent2 demo_agenteval demo_mcp demo_doc_vision; do
             printf "  %-18s " "$d"
             python "demos/$d.py" > /dev/null
             echo "OK"

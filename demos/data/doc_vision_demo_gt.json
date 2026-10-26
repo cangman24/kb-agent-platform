@@ -1,0 +1,119 @@
+{
+ "title": "Quarterly Infrastructure Operations Review",
+ "table": [
+  [
+   "Category",
+   "Open",
+   "Closed",
+   "Total"
+  ],
+  [
+   "Network",
+   "12",
+   "34",
+   "46"
+  ],
+  [
+   "Storage",
+   "8",
+   "27",
+   "35"
+  ],
+  [
+   "Compute",
+   "15",
+   "41",
+   "56"
+  ],
+  [
+   "Access",
+   "5",
+   "19",
+   "24"
+  ]
+ ],
+ "bars": [
+  {
+   "label": "Mon",
+   "value": 40.0,
+   "rect": [
+    129.0,
+    354.0,
+    173.0,
+    426.0
+   ]
+  },
+  {
+   "label": "Tue",
+   "value": 65.0,
+   "rect": [
+    211.0,
+    354.0,
+    255.0,
+    471.0
+   ]
+  },
+  {
+   "label": "Wed",
+   "value": 55.0,
+   "rect": [
+    293.0,
+    354.0,
+    337.0,
+    453.0
+   ]
+  },
+  {
+   "label": "Thu",
+   "value": 80.0,
+   "rect": [
+    375.0,
+    354.0,
+    419.0,
+    498.0
+   ]
+  },
+  {
+   "label": "Fri",
+   "value": 70.0,
+   "rect": [
+    457.0,
+    354.0,
+    501.0,
+    480.0
+   ]
+  }
+ ],
+ "ticks": [
+  {
+   "y_pixel_pdf": 354.0,
+   "value": 0.0
+  },
+  {
+   "y_pixel_pdf": 390.0,
+   "value": 20.0
+  },
+  {
+   "y_pixel_pdf": 426.0,
+   "value": 40.0
+  },
+  {
+   "y_pixel_pdf": 462.0,
+   "value": 60.0
+  },
+  {
+   "y_pixel_pdf": 498.0,
+   "value": 80.0
+  },
+  {
+   "y_pixel_pdf": 534.0,
+   "value": 100.0
+  }
+ ],
+ "plot_box_pdf": [
+  110.0,
+  354.0,
+  520.0,
+  534.0
+ ]
+}

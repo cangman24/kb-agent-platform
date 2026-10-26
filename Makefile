@@ -33,7 +33,7 @@ test:  ## 跑全部离线单测（零第三方依赖）
 	$(PY) -m unittest discover -s tests -v
 
 demo:  ## 逐个跑离线 demo（任一失败即退出）
-	@for d in demo_agent demo_agent2 demo_agenteval demo_mcp; do \
+	@for d in demo_agent demo_agent2 demo_agenteval demo_mcp demo_doc_vision; do \
 	  printf "  %-18s " "$$d"; \
 	  if $(PY) "demos/$$d.py" > /dev/null 2>&1; then echo "OK"; else echo "FAIL"; exit 1; fi; \
 	done
