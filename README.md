@@ -67,6 +67,18 @@ python -X utf8 -m kb_agent.cli --offline --resume my-agent-demo
 
 Agent 离线使用规则决策。需要节点级实时推送时，可在 Agent 虚拟环境安装 `langgraph==0.2.28`。单独体验 Agent 浏览器后端时，可分别运行 `python -m uvicorn kb_agent.agent_api:app_factory --factory --port 8100` 和 `python -X utf8 tools/serve_ui.py`。
 
+### 两个项目都使用真实模型
+
+在两个项目各自的虚拟环境安装 `openai>=1.51,<2` 和 `python-dotenv`，然后在各自的 `.env` 配置 Key、Base URL 和模型名。运行：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 tools/start_local_demo.py --llm
+```
+
+打开 [本机面板](http://127.0.0.1:18080/)。问答页由真实模型依据 RAG 演示文档作答，Agent 页使用内置业务知识库和真实模型选择工具。已安装 LangGraph 时使用图引擎，否则使用自实现引擎。独立启动真实模型 Agent 轨迹接口可运行 `python -m uvicorn kb_agent.agent_api:model_app_factory --factory --port 8100`。
+
+如本机代理阻断模型接口，可在各自的 `.env` 设置 `NO_PROXY=127.0.0.1,localhost,模型服务域名`。修改配置后重启服务生效。
+
 ### 执行中止与回放
 
 命令行与业务问答服务使用自实现引擎。`/agent/*` 轨迹接口优先使用 LangGraph，未安装时回退到自实现引擎。

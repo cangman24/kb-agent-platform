@@ -254,11 +254,13 @@ def app_factory(
     llm: Optional[Any] = None,
     checkpoint_dir: str = "data/checkpoints",
     prefer_langgraph: bool = True,
+    route_table: Optional[Dict[str, Any]] = None,
 ) -> FastAPI:
     """FastAPI app 工厂（`uvicorn ...:app_factory --factory`）。"""
     engine = build_agent_engine(
         registry=registry, checkpointer=checkpointer, llm=llm,
         checkpoint_dir=checkpoint_dir, prefer_langgraph=prefer_langgraph,
+        route_table=route_table,
     )
     cp = getattr(engine, "checkpointer", None)
     app = FastAPI(title="KB Agent Platform",
@@ -274,7 +276,9 @@ def app_factory(
             except Exception:  # noqa: BLE001
                 threads = []
         info = _engine_info(engine)
-        info.update({"status": "ok", "threads": len(threads)})
+        info.update({"status": "ok", "threads": len(threads),
+                     "llm_configured": llm is not None,
+                     "model": getattr(llm, "model", None)})
         return info
 
     @app.get("/agent/threads")
@@ -477,3 +481,17 @@ def _summary_frame(state: Any, t0: float) -> str:
         "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
     }
     return format_sse(payload, event="summary")
+
+
+def model_app_factory() -> FastAPI:
+    """使用本地 .env、内置业务知识库和真实模型的轨迹 API。"""
+    from kb_agent.app import build_production_service
+
+    service = build_production_service()
+    original = service.engine
+    return app_factory(
+        registry=original.registry,
+        llm=original.act_fn.llm,
+        route_table=original.route_table,
+        checkpointer=original.checkpointer,
+    )

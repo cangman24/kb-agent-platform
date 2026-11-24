@@ -36,6 +36,8 @@ def main() -> int:
     parser.add_argument("--ui-port", type=int, default=18080)
     parser.add_argument("--agent-port", type=int, default=18100)
     parser.add_argument("--rag-port", type=int, default=18000)
+    parser.add_argument("--llm", action="store_true",
+                        help="两个后端都使用各自 .env 配置的真实模型")
     args = parser.parse_args()
     ports = {args.ui_port, args.agent_port, args.rag_port}
     if len(ports) != 3:
@@ -55,10 +57,16 @@ def main() -> int:
     logs = ROOT / "data/checkpoints/local-demo"
     logs.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, PYTHONUTF8="1", LANGSMITH_TRACING="false", LANGCHAIN_TRACING_V2="false")
+    rag_command = [str(rag_python), "-u", "demos/serve_offline.py",
+                   "--port", str(args.rag_port)]
+    if args.llm:
+        rag_command.append("--llm")
+    agent_factory = ("kb_agent.agent_api:model_app_factory" if args.llm
+                     else "kb_agent.agent_api:app_factory")
     services = [
-        (rag, [str(rag_python), "-u", "demos/serve_offline.py", "--port", str(args.rag_port)],
+        (rag, rag_command,
          f"http://{HOST}:{args.rag_port}/health", logs / "rag.log"),
-        (ROOT, [sys.executable, "-u", "-m", "uvicorn", "kb_agent.agent_api:app_factory",
+        (ROOT, [sys.executable, "-u", "-m", "uvicorn", agent_factory,
                 "--factory", "--host", HOST, "--port", str(args.agent_port)],
          f"http://{HOST}:{args.agent_port}/agent/health", logs / "agent.log"),
     ]
