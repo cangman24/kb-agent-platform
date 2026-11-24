@@ -210,3 +210,22 @@ MIT
 ```powershell
 python demos/live/demo_agent_eval_real.py --tasks data/eval/demo_agent_tasks.jsonl
 ```
+
+## 全量语料的本地检索体验
+
+在 RAG 的模型目录准备好 BGE-M3 和 BGE Reranker 权重，并在其专用 Python 环境安装 CUDA PyTorch、transformers 和 HTTP 服务依赖后，使用全量模式启动。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 tools/start_local_demo.py --production --local --rag-python "C:\Users\jdy203205\miniconda3\envs\agent_rag\python.exe" --ui-port 20080 --rag-port 20000 --agent-port 20100
+```
+
+`--rag-python` 指向本机已装好模型依赖的 Python，其他机器请替换路径。若依赖安装在 RAG 自己的 `.venv`，可省略此参数。启动器最多等待 180 秒供模型加载与首次建库。
+
+打开 [本机页面](http://127.0.0.1:20080/)，确认顶部为 303 个片段。点「＋新对话」后依次测试：
+
+- “病虫害巡检的地面采样距离和抽样复核比例分别是多少？”应在首个出处中看到 2 厘米、20%。
+- “NDVI 的计算公式是什么？”应命中 NDVI 文档，展开来源可见公式。
+- “明天合肥的天气和最高气温是什么？”应拒答，引用数为 0。
+- Agent 轨迹页可用“查一下工单复核流程”测试规则引擎和回放。`python demos/demo_agent_trace.py` 可进一步验证工具超时及未完成任务续跑。
+
+`--production --local` 使用本地 BGE 和规则 Agent，页面显示检索原文片段。`--production` 会启用配置的远程模型生成回答，适用于已同意把检索片段交给该接口的场景。已有服务占用端口时，启动器会提示退出。由自己终端启动的服务可按 Ctrl+C 关闭。

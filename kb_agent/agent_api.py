@@ -404,10 +404,16 @@ def app_factory(
     def _sse_stream(query: str, thread_id: Optional[str],
                     resume: bool) -> Iterator[str]:
         t0 = time.perf_counter()
-        yield from stream_agent_events(
-            engine.run_stream(query, thread_id=thread_id, resume=resume))
+        events = []
+
+        def capture() -> Iterator[Dict[str, Any]]:
+            for event in engine.run_stream(query, thread_id=thread_id, resume=resume):
+                events.append(event)
+                yield event
+
+        yield from stream_agent_events(capture())
         st = engine.last_state
-        yield _summary_frame(st, t0)
+        yield _summary_frame(st, t0, events)
         yield _spans_frame(getattr(engine, "last_spans", []) or [])
 
     return app
@@ -469,17 +475,12 @@ def _spans_frame(spans: List[Dict[str, Any]]) -> str:
     return format_sse(_span_payload(spans), event="spans")
 
 
-def _summary_frame(state: Any, t0: float) -> str:
+def _summary_frame(state: Any, t0: float,
+                   events: Optional[List[Dict[str, Any]]] = None) -> str:
     """事件流结束后的汇总帧（前端顶部汇总条用）。"""
     from core.sse import format_sse
-    payload = {
-        "answer": getattr(state, "answer", "") if state else "",
-        "thread_id": getattr(state, "thread_id", "") if state else "",
-        "rounds": getattr(state, "rounds", 0) if state else 0,
-        "tool_calls": getattr(state, "tool_calls", 0) if state else 0,
-        "stop_reason": getattr(state, "stop_reason", "") if state else "",
-        "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
-    }
+    payload = _summarize(events or [], state)
+    payload["latency_ms"] = round((time.perf_counter() - t0) * 1000, 1)
     return format_sse(payload, event="summary")
 
 
