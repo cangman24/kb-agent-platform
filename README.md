@@ -200,3 +200,13 @@ tools/                     make_demo_pdf.py：纯标准库生成带 ground truth
 ## License
 
 MIT
+
+## Agent 任务集
+
+当前可运行的演示集为 `data/eval/demo_agent_tasks.jsonl`，包含 5 条任务。
+原双项目仓库的 150 条遥感与旧工单任务及复现说明已保存在 [历史归档](data/eval/archive/README.md)。
+任务集的知识主题、工单编号和期望工具顺序需要与当前业务数据匹配，适配并复核后可指定输入运行真实模型评测。
+
+```powershell
+python demos/live/demo_agent_eval_real.py --tasks data/eval/demo_agent_tasks.jsonl
+```

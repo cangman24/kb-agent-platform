@@ -12,6 +12,7 @@
     cp .env.example .env      # 填 DEEPSEEK_API_KEY
     python demos/live/demo_agent_eval_real.py
 """
+import argparse
 import os
 import sys
 
@@ -22,6 +23,9 @@ TASKS_PATH = "data/eval/demo_agent_tasks.jsonl"
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--tasks", default=TASKS_PATH, help="指定已复核的 Agent 任务集")
+    args = parser.parse_args()
     try:
         from dotenv import load_dotenv
         load_dotenv()
@@ -51,12 +55,13 @@ def main() -> int:
     registry = build_registry_from_index(index, metrics_fn=metric_fn)
 
     # ============ 2. 任务集 ============
-    tasks = load_agent_tasks(TASKS_PATH)
+    tasks = load_agent_tasks(args.tasks)
     print(f"[加载] 任务数: {len(tasks)}")
 
     # ============ 3. 真 LLM ============
     llm = LLMClient(api_key=os.environ["DEEPSEEK_API_KEY"],
-                    model=env("DEEPSEEK_MODEL"), cache=None)
+                    model=env("DEEPSEEK_MODEL"),
+                    base_url=env("DEEPSEEK_BASE_URL"), cache=None)
 
     # ============ 4. 四档消融 ============
     reports = []

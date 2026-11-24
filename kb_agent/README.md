@@ -103,8 +103,7 @@ kb_agent/
 ### 4.1 零依赖试跑
 
 ```bash
-cd _starter
-python demo_agent2.py     # 六个场景：多步任务 / 幻觉工具 / 越权 / 兜底 / 预算 / 续跑
+python demos/demo_agent2.py     # 六个场景：多步任务 / 幻觉工具 / 越权 / 兜底 / 预算 / 续跑
 ```
 
 ### 4.2 接入真 DeepSeek
