@@ -46,7 +46,8 @@ except ImportError as exc:  # pragma: no cover - 取决于环境
         f"原始错误: {exc}"
     ) from exc
 
-from core.agent import EventType, InMemoryCheckpointer, JsonFileCheckpointer
+from core.agent import (DEFAULT_TOOL_TIMEOUT_S, DEFAULT_TOTAL_TIMEOUT_S, EventType,
+                        InMemoryCheckpointer, JsonFileCheckpointer)
 from core.agent_langgraph import langgraph_available, make_agent_engine
 from core.observability import analyze
 from core.sse import SSE_MEDIA_TYPE, stream_agent_events
@@ -182,6 +183,8 @@ def build_agent_engine(
     prefer_langgraph: bool = True,
     max_rounds: int = 6,
     max_tool_calls: int = 12,
+    total_timeout_s: float = DEFAULT_TOTAL_TIMEOUT_S,
+    tool_timeout_s: float = DEFAULT_TOOL_TIMEOUT_S,
 ) -> Any:
     """装配 Agent 引擎：优先真 LangGraph，装不上自动回退自实现版。
 
@@ -219,6 +222,8 @@ def build_agent_engine(
         checkpointer=checkpointer,
         max_rounds=max_rounds,
         max_tool_calls=max_tool_calls,
+        total_timeout_s=total_timeout_s,
+        tool_timeout_s=tool_timeout_s,
     )
 
 
@@ -231,7 +236,8 @@ def _engine_info(engine: Any) -> Dict[str, Any]:
                         (getattr(engine, "route_table", {}) or {}).items()},
         "fuses": {"max_rounds": getattr(engine, "max_rounds", None),
                   "max_tool_calls": getattr(engine, "max_tool_calls", None),
-                  "total_timeout_s": getattr(engine, "total_timeout_s", None)},
+                  "total_timeout_s": getattr(engine, "total_timeout_s", None),
+                  "tool_timeout_s": getattr(engine, "tool_timeout_s", None)},
     }
     if hasattr(engine, "graph_nodes"):
         try:

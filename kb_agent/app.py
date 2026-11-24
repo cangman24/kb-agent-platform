@@ -22,7 +22,8 @@ import os
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
-from core.agent import AgentEngine, Checkpointer, JsonFileCheckpointer
+from core.agent import (DEFAULT_TOOL_TIMEOUT_S, DEFAULT_TOTAL_TIMEOUT_S, AgentEngine,
+                        Checkpointer, JsonFileCheckpointer)
 from core.bm25 import BM25Index
 from core.retrieval import recursive_chunk
 from core.memory import ContextCompressor, LayeredMemory, Message
@@ -139,7 +140,8 @@ def build_engine(
     plan_fn: Optional[Callable[[str, str], List[str]]] = None,
     max_rounds: int = 6,
     max_tool_calls: int = 12,
-    total_timeout_s: float = 120.0,
+    total_timeout_s: float = DEFAULT_TOTAL_TIMEOUT_S,
+    tool_timeout_s: float = DEFAULT_TOOL_TIMEOUT_S,
 ) -> AgentEngine:
     """组装受控 Agent 引擎。
 
@@ -169,6 +171,7 @@ def build_engine(
         max_rounds=max_rounds,
         max_tool_calls=max_tool_calls,
         total_timeout_s=total_timeout_s,
+        tool_timeout_s=tool_timeout_s,
     )
     engine._intent_calls = intent_calls  # 便于测试断言"续跑没重新识别意图"
     return engine

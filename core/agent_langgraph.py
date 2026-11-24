@@ -32,14 +32,16 @@ from __future__ import annotations
 
 import importlib
 import time
+from copy import deepcopy
 from typing import (Any, Callable, Dict, Iterator, List, Optional, Sequence,
                     Tuple, TypedDict)
 
 from .agent import (
     DEFAULT_MAX_ROUNDS, DEFAULT_MAX_TOOL_CALLS, DEFAULT_TOTAL_TIMEOUT_S,
     DEFAULT_TOOL_TIMEOUT_S, AgentRun, AgentState, Checkpointer, EventType,
-    make_event,
+    json_safe, make_event, repeated_tool_call,
 )
+from .agent_budget import DeadlineExceeded, RunBudget
 from .mcp import ToolRegistry
 from .observability import (
     KIND_NODE,
@@ -94,6 +96,8 @@ class AgentGraphState(TypedDict, total=False):
     stop_reason: str
     last_observation: Any
     pending: Any
+    planned: bool
+    deadline_at: float
 
 
 # --------------------------------------------------------------------- 依赖探测
@@ -206,24 +210,20 @@ class LangGraphAgentEngine:
         self._pending.append(ev)
 
     def _limit_reached(self, state: AgentState) -> Optional[str]:
-        """三道熔断 + 超时。返回停止原因（None 表示还能继续）。"""
+        """检查轮数和调用次数。"""
         if state.rounds >= self.max_rounds:
             return "max_rounds"
         if state.tool_calls >= self.max_tool_calls:
             return "max_tool_calls"
-        if state.elapsed_s(self._clock) > self.total_timeout_s:
-            return "total_timeout"
         return None
+
+    def _budget(self, state: Dict[str, Any]) -> RunBudget:
+        return RunBudget(self.total_timeout_s, state["started_at"], self._clock,
+                         deadline_at=state.get("deadline_at"))
 
     def detect_loop(self, state: AgentState, window: int = 3) -> bool:
         """死循环检测：最近 window 轮的工具调用签名完全相同则判定为循环。"""
-        sigs = [s.get("sig") for s in state.scratchpad
-                if s.get("type") == "tool_call"]
-        sigs = [s for s in sigs if s]
-        if len(sigs) < window:
-            return False
-        tail = sigs[-window:]
-        return len(set(tail)) == 1
+        return repeated_tool_call(state, window)
 
     # ------------------------------------------------------------ 建图
     def _build_graph(self) -> Any:
@@ -285,19 +285,24 @@ class LangGraphAgentEngine:
 
     # ------------------------------------------------------------ 节点实现
     def _node_intent(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        if state.get("planned"):
+            return {"task_type": state["task_type"]}
         with self._span("node:" + self.N_INTENT):
             self._intent_calls += 1
             query = state["query"]
-            ttype = self.intent_fn(query)
+            ttype = self._budget(state).call(self.intent_fn, query)
             allowed = self.route(ttype)
             self._emit(EventType.INTENT, task_type=ttype, allowed_tools=allowed)
             return {"task_type": ttype, "allowed_tools": allowed}
 
     def _node_plan(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        if state.get("planned"):
+            return {"planned": True}
         with self._span("node:" + self.N_PLAN):
-            plan = self.plan_fn(state["query"], state.get("task_type", "general"))
+            plan = self._budget(state).call(self.plan_fn, state["query"],
+                                            state.get("task_type", "general"))
             self._emit(EventType.PLAN, steps=plan)
-            return {"plan": list(plan)}
+            return {"plan": list(plan), "planned": True}
 
     def _node_act(self, state: Dict[str, Any]) -> Dict[str, Any]:
         """模型决策节点：调工具 / 给答案 / 触发熔断。
@@ -312,12 +317,14 @@ class LangGraphAgentEngine:
           真实 langgraph 同样会把节点返回值当作状态更新合并 —— 原地修改要么被丢、
           要么在并行分支下产生难以复现的竞态。
         """
-        if state.get("finished"):
-            return {}
+        if state.get("finished") or state.get("stop_reason"):
+            return {"stop_reason": state.get("stop_reason", "")}
 
         cur = self._as_state(state)
 
         with self._span(f"node:{self.N_ACT}", rounds=cur.rounds) as sp:
+            budget = self._budget(state)
+            budget.check()
             limit = self._limit_reached(cur)
             if limit:
                 self._emit(EventType.LIMIT, reason=limit, rounds=cur.rounds,
@@ -333,14 +340,13 @@ class LangGraphAgentEngine:
                                     error="loop_detected")
                 return {"stop_reason": "loop_detected"}
 
-            decision = self.act_fn(cur, list(state.get("allowed_tools", [])))
-            decision = decision or {}
+            decision = budget.call(self.act_fn, deepcopy(cur), list(cur.allowed_tools))
+            decision = json_safe(decision) or {}
             rounds = cur.rounds + 1
 
             if decision.get("final") is not None:
                 answer = str(decision.get("final") or "")
                 cites = list(decision.get("citations") or [])
-                self._emit(EventType.ANSWER, text=answer[:200], citations=cites)
                 return {"answer": answer, "citations": cites, "rounds": rounds,
                         "pending": None}
 
@@ -366,6 +372,8 @@ class LangGraphAgentEngine:
         tool_calls = int(state.get("tool_calls", 0))
 
         with self._span("node:" + self.N_TOOLS) as nsp:
+            budget = self._budget(state)
+            budget.check()
             if tool not in allowed:
                 # ★ 白名单是硬约束：不在清单里直接拒绝，且**不消耗**工具预算
                 msg = f"工具 {tool} 不在当前意图的允许清单 {allowed} 内"
@@ -386,10 +394,12 @@ class LangGraphAgentEngine:
                                     error="max_tool_calls")
                 return {"stop_reason": "max_tool_calls", "pending": None}
 
+            tsp = self._tracer.start(f"tool:{tool}", KIND_TOOL, tool=tool)
             try:
-                with self._span(f"tool:{tool}", KIND_TOOL, tool=tool) as tsp:
-                    result = self.registry.call(tool, args)
-                    self._tracer.finish(tsp, status="ok")
+                result = budget.call_tool(self.registry, tool, args, allowed,
+                                          self.tool_timeout_s)
+                result = json_safe(result)
+                self._tracer.finish(tsp)
                 scratchpad.append({
                     "type": "tool_call", "tool": tool, "args": args, "ok": True,
                     "result": result,
@@ -400,6 +410,21 @@ class LangGraphAgentEngine:
                 return {"scratchpad": scratchpad, "pending": None,
                         "tool_calls": tool_calls + 1,
                         "last_observation": result}
+            except DeadlineExceeded as exc:
+                self._tracer.finish(tsp, status=STATUS_LIMIT, error=exc.reason)
+                if exc.started:
+                    tool_calls += 1
+                    scratchpad.append({
+                        "type": "tool_call", "tool": tool, "args": args,
+                        "ok": False, "error": exc.reason,
+                    })
+                self._emit(EventType.TOOL_ERROR, tool=tool, blocked=False,
+                           message=exc.reason, error=exc.reason, reason=exc.reason)
+                self._emit(EventType.LIMIT, reason=exc.reason,
+                           rounds=state.get("rounds", 0), tool_calls=tool_calls)
+                return {"scratchpad": scratchpad, "pending": None,
+                        "tool_calls": tool_calls, "stop_reason": exc.reason,
+                        "finished": True}
             except Exception as exc:  # noqa: BLE001 - 工具异常不该让整轮崩掉
                 self._tracer.finish(tsp, status=STATUS_ERROR, error=str(exc))
                 scratchpad.append({
@@ -415,7 +440,9 @@ class LangGraphAgentEngine:
     def _node_verify(self, state: Dict[str, Any]) -> Dict[str, Any]:
         answer = state.get("answer") or ""
         with self._span("node:" + self.N_VERIFY) as sp:
-            ok, reason = self.verify_fn(self._as_state(state), answer)
+            ok, reason = self._budget(state).call(
+                self.verify_fn, deepcopy(self._as_state(state)), answer)
+            self._emit(EventType.ANSWER, text=answer[:200], citations=state.get("citations", []))
             self._emit(EventType.VERIFY, ok=ok, reason=reason)
             self._tracer.finish(sp, ok=bool(ok), reason=reason)
         updates: Dict[str, Any] = {"verified": bool(ok), "verify_reason": reason}
@@ -456,7 +483,7 @@ class LangGraphAgentEngine:
             plan=list(d.get("plan", [])),
             rounds=int(d.get("rounds", 0)),
             tool_calls=int(d.get("tool_calls", 0)),
-            started_at=float(d.get("started_at", self._clock())),
+            started_at=float(d["started_at"] if "started_at" in d else self._clock()),
             answer=d.get("answer", "") or "",
             citations=list(d.get("citations", [])),
             verified=bool(d.get("verified")),
@@ -464,6 +491,7 @@ class LangGraphAgentEngine:
             finished=bool(d.get("finished")),
             stop_reason=d.get("stop_reason", "") or "",
             last_observation=d.get("last_observation"),
+            planned=bool(d.get("planned")),
         )
         s.scratchpad = list(d.get("scratchpad", []))
         return s
@@ -551,6 +579,8 @@ class LangGraphAgentEngine:
         # span 树每次运行重开，落盘回调指向本 thread
         self._tracer.reset(sink=self._span_sink(tid))
 
+        started_at = self._clock()
+
         # ★ 根 span 包住整次运行：甘特条的总时长就是它
         with self._span("run", KIND_RUN, thread_id=tid,
                         query=(query or "")[:80]) as root:
@@ -568,7 +598,7 @@ class LangGraphAgentEngine:
                 "scratchpad": [],
                 "rounds": 0,
                 "tool_calls": 0,
-                "started_at": self._clock(),
+                "started_at": started_at,
                 "answer": "",
                 "citations": [],
                 "verified": False,
@@ -598,6 +628,9 @@ class LangGraphAgentEngine:
                         self.last_state = saved
                         return
 
+            init["planned"] = bool(init.get("planned") or init["plan"] or init["rounds"])
+            init["stop_reason"] = ""
+            init["deadline_at"] = self._budget(init).deadline_at
             final: Dict[str, Any] = dict(init)
             try:
                 if hasattr(self._graph, "stream"):
@@ -615,6 +648,16 @@ class LangGraphAgentEngine:
                     final.update(self._graph.invoke(init) or {})
                     for ev in self._flush(tid):
                         yield ev
+            except DeadlineExceeded as exc:
+                final.update(stop_reason=exc.reason, finished=True, answer="", citations=[])
+                self._tracer.finish(root, status=STATUS_LIMIT, error=exc.reason)
+                self._save(self._as_state(final))
+                self._emit(EventType.LIMIT, reason=exc.reason, rounds=final["rounds"],
+                           tool_calls=final["tool_calls"])
+                self._emit(EventType.DONE, reason=exc.reason, rounds=final["rounds"],
+                           tool_calls=final["tool_calls"])
+                for ev in self._flush(tid):
+                    yield ev
             except Exception as exc:  # noqa: BLE001
                 self._emit(EventType.ERROR, message=f"图执行失败: {exc}")
                 final["stop_reason"] = "graph_error"
@@ -689,7 +732,8 @@ class LangGraphAgentEngine:
             ],
             "fuses": {"max_rounds": self.max_rounds,
                       "max_tool_calls": self.max_tool_calls,
-                      "total_timeout_s": self.total_timeout_s},
+                      "total_timeout_s": self.total_timeout_s,
+                      "tool_timeout_s": self.tool_timeout_s},
             "route_table": {k: list(v) for k, v in self.route_table.items()},
         }
 

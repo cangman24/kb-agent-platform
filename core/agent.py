@@ -22,16 +22,19 @@ import json
 import os
 import threading
 import time
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import (Any, Callable, Dict, Iterator, List, Optional, Sequence,
                     Tuple)
 
+from .agent_budget import DeadlineExceeded, RunBudget
 from .mcp import ToolError, ToolNotAllowed, ToolRegistry
 from .observability import (
     KIND_RUN,
     KIND_TOOL,
     STATUS_BLOCKED,
     STATUS_ERROR,
+    STATUS_LIMIT,
     SpanTracer,
 )
 
@@ -107,6 +110,7 @@ class AgentState:
     finished: bool = False
     stop_reason: str = ""
     last_observation: Any = None
+    planned: bool = False
 
     # ---------------------------------------------------------- 序列化
     def to_dict(self) -> Dict[str, Any]:
@@ -140,6 +144,19 @@ class AgentState:
         """用于重复动作检测：轮次无关，只看意图与工具序列。"""
         tools = [s.get("tool") for s in self.scratchpad if s.get("tool")]
         return f"{self.task_type}|{','.join(tools)}"
+
+
+def repeated_tool_call(state: AgentState, window: int) -> bool:
+    """比较最近的工具和 JSON 参数，兼容没有签名字段的历史检查点。"""
+    calls = [entry for entry in state.scratchpad
+             if entry.get("type") == "tool_call" and entry.get("tool")]
+    if window < 2 or len(calls) < window:
+        return False
+    signatures = {
+        (entry["tool"], json.dumps(json_safe(entry.get("args") or {}), sort_keys=True))
+        for entry in calls[-window:]
+    }
+    return len(signatures) == 1
 
 
 # --------------------------------------------------------------------- Checkpoint
@@ -493,6 +510,9 @@ class AgentEngine:
         if state is None:
             state = AgentState(query=query, thread_id=tid, started_at=self._clock())
 
+        budget = RunBudget(self.total_timeout_s, state.started_at, self._clock)
+        state.stop_reason = ""
+
         # 耗时归因：span 树每次运行重开，落盘回调指向本 thread。
         # ★ 根 span 手动 start/finish（而不是 with）：本函数有多个 return 点，
         #   用 with 要么大改缩进、要么漏掉提前 return 的路径。
@@ -500,27 +520,23 @@ class AgentEngine:
         root = self._tracer.start("run", KIND_RUN, thread_id=tid,
                                   query=(query or "")[:80])
         try:
-            if not state.plan:
+            if not (state.planned or state.plan or state.rounds):
+                query = state.query
                 emit(EventType.START, query=query, thread_id=tid)
                 # ---- 节点 1：意图识别 ----
-                state.task_type = self.intent_fn(query) or "general"
+                state.task_type = budget.call(self.intent_fn, query) or "general"
                 state.allowed_tools = self.route(state.task_type)
                 emit(EventType.INTENT, task_type=state.task_type,
                      allowed_tools=state.allowed_tools)
                 # ---- 节点 2：任务规划 ----
-                state.plan = list(self.plan_fn(query, state.task_type) or [])
+                state.plan = list(budget.call(self.plan_fn, query, state.task_type) or [])
+                state.planned = True
                 emit(EventType.PLAN, steps=state.plan)
                 self._save(state)
 
             # ---- 节点 3~N：act / verify 循环（条件边） ----
             while state.rounds < self.max_rounds:
-                # 熔断：总耗时（★ 走注入时钟，便于测试与时间旅行调试）
-                elapsed = self._clock() - state.started_at
-                if elapsed > self.total_timeout_s:
-                    state.stop_reason = "total_timeout"
-                    emit(EventType.LIMIT, reason="total_timeout",
-                         elapsed_s=round(elapsed, 2))
-                    break
+                budget.check()
                 # 熔断：工具调用次数
                 if state.tool_calls >= self.max_tool_calls:
                     state.stop_reason = "max_tool_calls"
@@ -528,8 +544,14 @@ class AgentEngine:
                          tool_calls=state.tool_calls)
                     break
 
+                if self.detect_loop(state):
+                    state.stop_reason = "loop_detected"
+                    emit(EventType.LIMIT, reason="loop_detected", rounds=state.rounds)
+                    self._tracer.finish(root, status=STATUS_LIMIT, error="loop_detected")
+                    break
+
                 state.rounds += 1
-                decision = self.act_fn(state, state.allowed_tools) or {}
+                decision = budget.call(self.act_fn, deepcopy(state), list(state.allowed_tools))
                 decision = json_safe(decision) or {}
 
                 # ---- 模型认为可以收尾 ----
@@ -537,7 +559,7 @@ class AgentEngine:
                     answer = str(decision.get("final") or "")
                     state.answer = answer
                     state.citations = list(decision.get("citations") or [])
-                    ok, reason = self.verify_fn(state, answer)
+                    ok, reason = budget.call(self.verify_fn, deepcopy(state), answer)
                     state.verified = ok
                     state.verify_reason = reason
                     emit(EventType.VERIFY, ok=ok, reason=reason)
@@ -572,8 +594,8 @@ class AgentEngine:
                 try:
                     tsp = self._tracer.start(f"tool:{tool_name}", KIND_TOOL,
                                              tool=tool_name)
-                    result = self.registry.call(tool_name, args,
-                                                allowed=state.allowed_tools)
+                    result = budget.call_tool(self.registry, tool_name, args,
+                                              state.allowed_tools, self.tool_timeout_s)
                     self._tracer.finish(tsp)
                     state.tool_calls += 1
                     state.last_observation = json_safe(result)
@@ -587,6 +609,17 @@ class AgentEngine:
                     #   状态（例如自实现版没有 ok，面板会显示 ok=false）。
                     emit(EventType.TOOL_RESULT, tool=tool_name, ok=True,
                          result=state.last_observation)
+                except DeadlineExceeded as exc:
+                    self._tracer.finish(tsp, status=STATUS_LIMIT, error=exc.reason)
+                    if exc.started:
+                        state.tool_calls += 1
+                        state.scratchpad.append({
+                            "type": "tool_call", "tool": tool_name, "args": args,
+                            "ok": False, "error": exc.reason,
+                        })
+                    emit(EventType.TOOL_ERROR, tool=tool_name, error=exc.reason,
+                         message=exc.reason, blocked=False, reason=exc.reason)
+                    raise
                 except ToolNotAllowed as exc:
                     self._tracer.finish(tsp, status=STATUS_BLOCKED,
                                         error=str(exc))
@@ -610,6 +643,7 @@ class AgentEngine:
 
             # ---------------- 收尾 ----------------
             if not state.finished and not state.stop_reason:
+                budget.check()
                 state.stop_reason = "max_rounds"
                 emit(EventType.LIMIT, reason="max_rounds", rounds=state.rounds)
 
@@ -622,6 +656,19 @@ class AgentEngine:
             self.last_state = state
             return AgentRun(state=state, events=events)
 
+        except DeadlineExceeded as exc:
+            state.stop_reason = exc.reason
+            state.finished = True
+            state.answer = ""
+            state.citations = []
+            self._tracer.finish(root, status=STATUS_LIMIT, error=exc.reason)
+            self._save(state)
+            emit(EventType.LIMIT, reason=exc.reason, rounds=state.rounds,
+                 tool_calls=state.tool_calls)
+            emit(EventType.DONE, stop_reason=exc.reason,
+                 rounds=state.rounds, tool_calls=state.tool_calls)
+            self.last_state = state
+            return AgentRun(state=state, events=events)
         except Exception as exc:  # noqa: BLE001 - 顶层兜底，保证 checkpoint 落盘
             state.stop_reason = "error"
             self._tracer.finish(root, status=STATUS_ERROR,
@@ -693,13 +740,5 @@ class AgentEngine:
         return self.run(query="", thread_id=thread_id, resume=True)
 
     def detect_loop(self, state: AgentState, window: int = 3) -> bool:
-        """重复动作检测：最近 window 次工具序列完全一致 -> 判定为死循环。
-
-        用于给 act_fn 一个"你卡住了"的信号（真实项目里喂回模型让它换策略）。
-        """
-        tools = [s.get("tool") for s in state.scratchpad if s.get("tool")]
-        if len(tools) < window * 2:
-            return False
-        tail = tools[-window:]
-        prev = tools[-window * 2:-window]
-        return tail == prev
+        """最近连续 window 次调用的工具与参数相同时停止。"""
+        return repeated_tool_call(state, window)

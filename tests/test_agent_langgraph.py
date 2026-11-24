@@ -67,11 +67,11 @@ class _FakeCompiledGraph:
         self.b = builder
 
     def invoke(self, state):
-        return self._run(state, collect_all=False)[0]
-
-    def stream(self, state):
-        """逐节点产出 {node: updates}，语义对齐 langgraph 的 stream。"""
-        return self._run(state, collect_all=True)[1]
+        final = dict(state)
+        for chunk in self.stream(state):
+            for updates in chunk.values():
+                final.update(updates)
+        return final
 
     def get_graph(self):
         class G:
@@ -79,10 +79,10 @@ class _FakeCompiledGraph:
                 self.nodes = {i: type("N", (), {"id": i})() for i in ids}
         return G(list(self.b.nodes))
 
-    def _run(self, state, collect_all):
+    def stream(self, state):
+        """逐节点产出 {node: updates}，让调用方能在节点之间保存和暂停。"""
         cur = dict(state)
         node = self.b.entry
-        chunks = []
         seen = []
         for _ in range(200):                      # 硬上限，防测试挂死
             if node == self.b.END:
@@ -94,8 +94,7 @@ class _FakeCompiledGraph:
             if not isinstance(updates, dict):
                 raise TypeError(f"节点 {node} 必须返回 dict，返回了 {type(updates)}")
             cur.update(updates)
-            if collect_all:
-                chunks.append({node: updates})
+            yield {node: updates}
             # 决定下一个节点
             if node in self.b.cond:
                 fn, mapping = self.b.cond[node]
@@ -110,7 +109,6 @@ class _FakeCompiledGraph:
                 break
         else:
             raise RuntimeError(f"疑似无限循环，访问顺序: {seen[:12]} ...")
-        return cur, chunks
 
 
 class _FakeStateGraph:
@@ -711,7 +709,7 @@ class TestRealLangGraph(unittest.TestCase):
         eng = make_engine([{"final": "答案"}], real_langgraph=True)
         init = {"query": "q", "thread_id": "t1", "task_type": "general",
                 "allowed_tools": [], "plan": [], "scratchpad": [], "rounds": 0,
-                "tool_calls": 0, "started_at": 0.0, "answer": "", "citations": [],
+                "tool_calls": 0, "started_at": eng._clock(), "answer": "", "citations": [],
                 "verified": False, "verify_reason": "", "refused": False,
                 "finished": False, "stop_reason": "", "last_observation": None,
                 "pending": None}
