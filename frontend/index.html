@@ -321,7 +321,7 @@
   <header>
     <div>
       <h1>领域知识问答</h1>
-      <div class="sub" id="sub">82 篇作业规范 · 302 个片段 · 答案带出处</div>
+      <div class="sub" id="sub">知识库检索 · 答案带出处</div>
     </div>
     <div class="tabs">
       <button class="tab on" id="tabChat">问答</button>
@@ -456,15 +456,15 @@
         if (d.index_size) bits.push(d.index_size + " 个片段");
         if (d.llm_configured) bits.push("LLM 已接");
         document.getElementById("sub").textContent =
-          "82 篇作业规范 · " + bits.join(" · ") + " · 答案带出处";
+          bits.concat("答案带出处").join(" · ");
       })
       .catch(function(){
         setStatus("bad", "后端未连接");
         var e = document.createElement("div");
         e.className = "err";
         e.innerHTML = "连不上后端（<code>" + esc(API) + "/health</code>）。<br>" +
-          "先在 <code>_starter</code> 里启动服务：<br>" +
-          "<code>python -m rag1_knowledge_qa.server</code>（需 conda agent_rag 环境）";
+          "进入 <code>domain-rag-qa</code> 仓库后启动服务：<br>" +
+          "<code>python -m kb_qa.server</code>（使用 RAG 项目的虚拟环境）";
         wrap.appendChild(e);
       });
   }

@@ -485,39 +485,27 @@ class AgentService:
             yield stream.emit(ev.get("type") or "message", **payload)
 
     def trace(self, thread_id: str) -> Dict[str, Any]:
-        """取某次执行的完整轨迹（前端轨迹面板 / 事后审计）。
-
-        ★ 两级读取：
-            1. 内存 `self._runs` —— 同进程内的完整轨迹，含逐条事件。
-            2. 回落 Checkpoint —— 进程重启或换实例后仍能查到这次执行的
-               最终状态（意图 / 计划 / 轮数 / 终止原因 / 工具调用次数）。
-
-          ★ 事件流**不进** Checkpoint：事件是调试态的明细，体积大且不可回放；
-            落盘的是"状态"，这样审计能回答"这次执行做了什么、怎么结束的"，
-            而存储开销是常数级的。调用方据此用 `source` 区分两种来源。
-        """
+        """读取轨迹。历史检查点没有事件文件时仍可查看最终状态。"""
         run = self._runs.get(thread_id)
-        if run is not None:
-            return {
-                "thread_id": thread_id,
-                "found": True,
-                "source": "memory",
-                "task_type": run.state.task_type,
-                "allowed_tools": run.state.allowed_tools,
-                "plan": run.state.plan,
-                "rounds": run.state.rounds,
-                "tool_calls": run.state.tool_calls,
-                "stop_reason": run.state.stop_reason,
-                "scratchpad": run.state.scratchpad,
-                "events": run.events,
-            }
-        state = self._load_checkpoint(thread_id)
+        state = run.state if run is not None else self._load_checkpoint(thread_id)
         if state is None:
             return {"thread_id": thread_id, "found": False, "events": []}
-        return {
+
+        cp = getattr(self.engine, "checkpointer", None)
+        read_events = getattr(cp, "load_events", None)
+        events = []
+        if read_events is not None:
+            try:
+                events = read_events(thread_id)
+            except (OSError, ValueError):
+                pass
+        if not events and run is not None:
+            events = run.events
+
+        trace = {
             "thread_id": thread_id,
             "found": True,
-            "source": "checkpoint",
+            "source": "memory" if run is not None else "checkpoint",
             "task_type": getattr(state, "task_type", None),
             "allowed_tools": getattr(state, "allowed_tools", []),
             "plan": getattr(state, "plan", []),
@@ -525,9 +513,11 @@ class AgentService:
             "tool_calls": getattr(state, "tool_calls", 0),
             "stop_reason": getattr(state, "stop_reason", None),
             "scratchpad": getattr(state, "scratchpad", []),
-            "events": [],
-            "note": "仅恢复最终状态：事件明细不进 Checkpoint（见 trace 文档注释）",
+            "events": events,
         }
+        if not events:
+            trace["note"] = "检查点没有可用的事件明细，仅返回最终状态"
+        return trace
 
     def _load_checkpoint(self, thread_id: str) -> Any:
         """安全地从 Checkpoint 读状态；任何异常都按"没查到"处理。"""

@@ -1,6 +1,6 @@
 # KB Agent Platform
 
-![CI](https://github.com/cangman24/kb-agent-platform/actions/workflows/ci.yml/badge.svg) ![python](https://img.shields.io/badge/python-%3E%3D3.10-blue) ![tests](https://img.shields.io/badge/tests-394%20passing-brightgreen) ![deps](https://img.shields.io/badge/test%20deps-0-brightgreen) ![license](https://img.shields.io/badge/license-MIT-blue)
+![CI](https://github.com/cangman24/kb-agent-platform/actions/workflows/ci.yml/badge.svg) ![python](https://img.shields.io/badge/python-%3E%3D3.10-blue) ![deps](https://img.shields.io/badge/test%20deps-0-brightgreen) ![license](https://img.shields.io/badge/license-MIT-blue)
 
 一个**可控**的知识库 Agent：给大模型接上工具之后，把它关进一套工程约束里 ——
 路由白名单决定"能调什么"，熔断决定"最多跑几轮"，Checkpoint 决定"中断后怎么续"，
@@ -43,7 +43,29 @@ python3 -m venv .venv
 .venv/bin/python -X utf8 demos/demo_agent_trace.py
 ```
 
-主演示使用标准库和脚本化决策，展示工具调用、熔断、Checkpoint 续跑和轨迹回放。离线 CLI 可用 `python -X utf8 -m kb_agent.cli --offline --stream "查一下工单复核流程"` 试跑（先激活本仓库的 `.venv`）。
+主演示使用标准库和脚本化决策。运行后查看 `tool_timeout`、续跑前后的工具次数，以及轨迹文件和耗时归因。验收记录见 [TASKS.md](TASKS.md)。
+
+### 用自己的问题试跑并回放
+
+激活本仓库的 `.venv` 后执行。完成后的续跑会返回检查点中的答案。
+
+```powershell
+python -X utf8 -m kb_agent.cli --offline --stream --thread-id my-agent-demo "查一下工单复核流程"
+python -X utf8 -m kb_agent.cli --offline --trace my-agent-demo
+python -X utf8 -m kb_agent.cli --offline --resume my-agent-demo
+```
+
+### 浏览器轨迹面板（可选）
+
+将本仓库与 `domain-rag-qa` 放在同一目录，分别在各自的 `.venv` 执行 `python -m pip install -e ".[serve]"`。然后在本仓库运行：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 tools/start_local_demo.py
+```
+
+打开 [本机面板](http://127.0.0.1:18080/)。在「问答」输入“端侧推理时延要求是多少？”，点开引用查看原段落。在「Agent 轨迹」输入“查一下工单复核流程”，观察工具节点，然后用页内下拉框回放。按 Ctrl+C 关闭本次启动的服务。仓库不在同一目录时，用 `--rag-root` 指定 RAG 的路径。
+
+Agent 离线使用规则决策。需要节点级实时推送时，可在 Agent 虚拟环境安装 `langgraph==0.2.28`。单独体验 Agent 浏览器后端时，可分别运行 `python -m uvicorn kb_agent.agent_api:app_factory --factory --port 8100` 和 `python -X utf8 tools/serve_ui.py`。
 
 ### 执行中止与回放
 
@@ -159,7 +181,7 @@ tools/                     make_demo_pdf.py：纯标准库生成带 ground truth
 ## 与姊妹仓库的关系
 
 本仓库专注 **Agent 编排与管控**；检索侧的混合检索、父子块索引、精排与
-消融评测在 [domain-rag-qa](https://github.com/cangman24/domain-rag-qa)。
+检索消融见独立项目 [Domain RAG QA](https://github.com/cangman24/domain-rag-qa)。拆分前的源码与报告见 [原双项目仓库](https://github.com/cangman24/rag-eval-agent-platform)。
 两者共享同一套 `core/` 设计哲学（零依赖可测、逻辑与框架解耦），但**互不依赖**，
 可独立运行与阅读。
 

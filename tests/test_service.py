@@ -117,7 +117,14 @@ class TestAgentService(unittest.TestCase):
         tr = svc2.trace("T6")
         self.assertTrue(tr["found"])
         self.assertEqual(tr["source"], "checkpoint")
-        self.assertEqual(tr["events"], [], "事件明细不进 Checkpoint")
+        self.assertEqual(tr["events"], svc1.trace("T6")["events"])
+        self.assertTrue(any(event["type"] == "tool_call" for event in tr["events"]))
+
+        cp.reset_events("T6")
+        historical = svc2.trace("T6")
+        self.assertTrue(historical["found"])
+        self.assertEqual(historical["events"], [])
+        self.assertIn("仅返回最终状态", historical["note"])
 
     def test_trace_absent_without_checkpointer(self):
         svc, _, _ = make_agent_service()

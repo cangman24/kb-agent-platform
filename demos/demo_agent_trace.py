@@ -165,6 +165,15 @@ def main() -> int:
         print("    熔断节点：%s" % (e.get("data") or {}))
     ok("触发熔断并产生 limit 事件", bool(limits))
 
+    timeout_engine = make_engine([
+        {"tool": "kb_search", "args": {"query": "复核"}},
+        {"tool": "ticket_query", "args": {"ticket_id": "T-001"}},
+    ], tool_timeout_s=0.03)
+    timeout_run = timeout_engine.run("制度里的复核要求", thread_id="T-TIMEOUT")
+    print("  工具超时停止原因：" + timeout_run.state.stop_reason)
+    ok("工具超时后结束运行", timeout_run.state.stop_reason == "tool_timeout")
+    ok("工具超时后未启动后续工具", types(timeout_run.events).count(EventType.TOOL_CALL) == 1)
+
     # ---------------------------------------------------------------- ④
     section("④ 轨迹落盘与回放（面板「历史回放」的数据来源）")
     tmp = tempfile.mkdtemp(prefix="trace_demo_")
@@ -186,6 +195,27 @@ def main() -> int:
           % (len(cp.load_events("T-STORE")), len(ran), len(resumed)))
     ok("续跑是追加轨迹而非覆盖",
        len(cp.load_events("T-STORE")) >= len(ran))
+
+    def interrupt(state, allowed):
+        raise RuntimeError("演示中断：第一步工具结果已保存")
+
+    interrupted = make_engine([
+        {"tool": "kb_search", "args": {"query": "复核"}}, interrupt,
+    ], checkpointer=cp)
+    interrupted.run("制度里的复核要求", thread_id="T-RESUME")
+    saved = cp.load("T-RESUME")
+    print("  中断后的检查点：完成=%s，工具调用=%d" % (saved.finished, saved.tool_calls))
+    ok("中断后保留未完成检查点", not saved.finished and saved.tool_calls == 1)
+
+    continued = make_engine([
+        {"tool": "kb_search", "args": {"query": "时效"}},
+        {"final": "续跑完成：已汇总复核与时效要求"},
+    ], checkpointer=cp).resume("T-RESUME")
+    print("  续跑结果：%s，累计工具调用=%d" %
+          (continued.state.answer, continued.state.tool_calls))
+    ok("续跑保留首次结果且完成剩余步骤",
+       continued.state.finished and continued.state.tool_calls == 2
+       and EventType.INTENT not in types(continued.events))
 
     mem = InMemoryCheckpointer()
     e5 = make_engine([{"final": "内存版"}], checkpointer=mem)

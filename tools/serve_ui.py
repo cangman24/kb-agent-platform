@@ -141,8 +141,8 @@ class Handler(BaseHTTPRequestHandler):
             conn.request(method, target, body=body, headers=headers)
             resp = conn.getresponse()
         except Exception as exc:  # noqa: BLE001 - 后端没起时给前端一个可读错误
-            hint = ("rag1_knowledge_qa.server" if port == self.backend_port
-                    else "rag2_kb_agent.agent_api")
+            hint = ("kb_qa.server" if port == self.backend_port
+                    else "kb_agent.agent_api")
             payload = ('{"detail":"backend unreachable: %s","hint":"%s"}'
                        % (str(exc).replace('"', "'").replace("\\", "/"),
                           hint)).encode("utf-8")
@@ -218,11 +218,12 @@ def main(argv=None) -> int:
     print("网页客户端已启动：%s" % url)
     print("项目二 RAG 问答  %s:%d —— %s" % (
         args.backend_host, args.backend_port,
-        "已连接" if alive else "未连接（先启动 rag1_knowledge_qa.server）"))
+        "已连接" if alive else "未连接（进入 domain-rag-qa 后运行 python -m kb_qa.server）"))
     print("项目一 Agent 轨迹 %s:%d —— %s" % (
         args.backend_host, args.agent_port,
         "已连接" if alive_agent
-        else "未连接（先启动 uvicorn rag2_kb_agent.agent_api:app_factory --factory）"))
+        else "未连接（先启动 python -m uvicorn kb_agent.agent_api:app_factory --factory --port %d）"
+        % args.agent_port))
     print("按 Ctrl+C 停止\n")
 
     if args.open:

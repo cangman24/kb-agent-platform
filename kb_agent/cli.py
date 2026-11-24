@@ -99,7 +99,9 @@ def _demo_index():
 # --------------------------------------------------------------------- 渲染
 def render_trace(trace: dict) -> None:
     print(f"\n=== 轨迹 {trace.get('thread_id')} ===")
-    print(f"意图: {trace.get('intent')}    计划: {trace.get('plan')}")
+    print(f"意图: {trace.get('task_type')}    计划: {trace.get('plan')}")
+    if trace.get("note"):
+        print(trace["note"])
     for ev in trace.get("events", []):
         etype = ev.get("type", "")
         data = ev.get("data", {})

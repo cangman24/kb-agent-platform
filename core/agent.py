@@ -488,10 +488,21 @@ class AgentEngine:
     ) -> AgentRun:
         tid = thread_id or f"t{int(self._clock() * 1000)}"
         events: List[Dict[str, Any]] = []
+        cp = self.checkpointer
+        if cp is not None and not resume:
+            try:
+                cp.reset_events(tid)
+            except OSError:
+                pass
 
         def emit(etype: str, **data: Any) -> None:
             ev = make_event(etype, **data)
             events.append(ev)
+            if cp is not None:
+                try:
+                    cp.append_events(tid, [ev])
+                except OSError:
+                    pass
             if on_event is not None:
                 on_event(ev)
 
@@ -714,26 +725,7 @@ class AgentEngine:
             所以上层代码（API / 面板）不需要分支。前端想知道当前用的是哪一版，
             读 `GET /agent/health` 的 `engine` 字段。
         """
-        out: List[Dict[str, Any]] = []
-        cp = self.checkpointer
-        if cp is not None and not resume and thread_id:
-            cp.reset_events(thread_id)
-        # thread_id 由 run() 内部生成时才需要回捞 —— start 事件里带
-        holder: Dict[str, Any] = {"tid": thread_id}
-
-        def sink(ev: Dict[str, Any]) -> None:
-            if holder["tid"] is None:
-                holder["tid"] = (ev.get("data") or {}).get("thread_id")
-            out.append(ev)
-            if cp is not None and holder["tid"]:
-                try:
-                    cp.append_events(holder["tid"], [ev])
-                except OSError:  # pragma: no cover - 旁路失败不影响主流程
-                    pass
-
-        self.run(query, thread_id=thread_id, resume=resume, on_event=sink)
-        for ev in out:
-            yield ev
+        yield from self.run(query, thread_id=thread_id, resume=resume).events
 
     def resume(self, thread_id: str) -> AgentRun:
         """从检查点续跑。已完成节点不会重复执行。"""
