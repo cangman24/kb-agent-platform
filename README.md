@@ -10,12 +10,6 @@
 所以这个仓库的重点不是提示词，而是编排与管控 —— 而且这些逻辑全部
 **零第三方依赖、离线可验证**。
 
-```
-pip install -e .                        # 最小安装（什么都不装也能跑）
-python -m unittest discover -s tests    # 419 项单测；纯标准库可跑，CI 零依赖环境自动跳过 25 项（12 项 LangGraph 真库 + 10 项真 PDF + 3 项图表像素）
-python -m kb_agent.cli --offline "查一下工单复核流程"   # 无需 API Key
-```
-
 ---
 
 ## 它解决什么问题
@@ -33,26 +27,33 @@ python -m kb_agent.cli --offline "查一下工单复核流程"   # 无需 API Ke
 
 ## 快速开始
 
-```bash
-pip install -e .
+在本仓库根目录执行。使用 Python 3.10 或 3.11，并给本仓库单独建一个 `.venv`，以隔离两个项目同名的 `core` 包。 Debian/Ubuntu 如缺少 `venv` 组件，可安装与 Python 版本匹配的 `python3-venv` 包。只做离线验收时，也可以在创建虚拟环境的命令中加上 `--without-pip`。
 
-# 1) 看工具清单与权限白名单（离线）
-python -m kb_agent.cli --offline --tools
-
-# 2) 跑一条指令，看得到每一步（离线，无需 API Key）
-python -m kb_agent.cli --offline --stream "查一下工单复核流程"
-
-# 3) 接真模型（DeepSeek function calling）
-cp .env.example .env        # 填 DEEPSEEK_API_KEY
-python -m kb_agent.cli "复核岗的时效要求是什么"
-
-# 4) 起 HTTP 服务
-pip install -e ".[serve]"
-python -m kb_agent.server    # http://127.0.0.1:8000/docs
+```powershell
+# Windows PowerShell
+python -m venv .venv
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests
+.\.venv\Scripts\python.exe -X utf8 demos/demo_agent_trace.py
 ```
 
-只用标准库即可跑全部测试与离线 demo —— 不需要装 torch、不需要向量数据库、
-不需要 API Key。这是有意为之的设计：编排逻辑与模型解耦，才可能低成本验证。
+```bash
+# Linux
+python3 -m venv .venv
+.venv/bin/python -X utf8 -m unittest discover -s tests
+.venv/bin/python -X utf8 demos/demo_agent_trace.py
+```
+
+主演示使用标准库和脚本化决策，展示工具调用、熔断、Checkpoint 续跑和轨迹回放。离线 CLI 可用 `python -X utf8 -m kb_agent.cli --offline --stream "查一下工单复核流程"` 试跑（先激活本仓库的 `.venv`）。
+
+### 接真模型和 HTTP 服务（可选）
+
+```bash
+source .venv/bin/activate                 # Windows PowerShell 可用 .\.venv\Scripts\Activate.ps1
+python -m pip install -e ".[llm,serve]"
+cp .env.example .env                      # Windows PowerShell 同样支持 cp，填写 DEEPSEEK_API_KEY
+python -m kb_agent.cli "复核岗的时效要求是什么"
+python -m kb_agent.server                 # http://127.0.0.1:8000/docs
+```
 
 ---
 

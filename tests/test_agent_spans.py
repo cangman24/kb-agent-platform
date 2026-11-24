@@ -26,6 +26,7 @@ import os
 import sys
 import time
 import unittest
+from itertools import count
 
 # ★ 同 test_agent_stream.py：CI 有分模块跑法，sys.path 里没有 tests 目录
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -184,11 +185,13 @@ class TestPersistAndReplay(unittest.TestCase):
 
     def test_replay_gantt_contains_tool(self):
         cp = InMemoryCheckpointer()
-        eng = _tool_engine(checkpointer=cp)
+        ticks = count()
+        eng = _tool_engine(checkpointer=cp, clock=lambda: next(ticks) / 1000)
         st = eng.run("工单怎么样").state
         info = analyze(cp.load_spans(st.thread_id))
         self.assertIn("tool:kb_search", info["gantt"])
         self.assertGreater(info["total_ms"], 0.0)
+        self.assertEqual(info["total_ms"], analyze(eng.last_spans)["total_ms"])
 
     def test_replay_tree_equals_live_tree(self):
         cp = InMemoryCheckpointer()
