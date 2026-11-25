@@ -33,3 +33,12 @@ docs/
 *.md
 !README.md
 Makefile
+
+# 本机虚拟环境和运行数据库
+.venv/
+venv/
+build/
+data/app.db*
+
+# 内置知识库是运行输入
+!data/kb/*.md

@@ -169,7 +169,7 @@ tools/                     make_demo_pdf.py：纯标准库生成带 ground truth
 ## 工程化
 
 - **依赖分层**：`pip install -e .` 装什么都不装也能跑；`[llm]` `[serve]` `[dev]` 按需
-- **CI**：4 类 job（跨平台单测 / demo 与 CLI 冒烟 / ruff / 密钥防护），ubuntu 约 10 秒内、Windows 约 1 分钟内结束
+- **CI**：跨平台单测、demo 与 CLI、ruff、密钥防护及容器冒烟。容器 job 独立验证构建和内置知识库。
 - **密钥防护**：CI 扫描**全部 git 历史**，`.env` 一旦提交过就报红（镜像层与历史都不可变）
 - **元测试**：`tests/test_engineering_config.py` 守护配置文件自身不腐烂
   （Makefile 引用的 demo 存在、demo 的 `sys.path` 指向仓库根、源码不出现 CRLF）
@@ -183,7 +183,7 @@ tools/                     make_demo_pdf.py：纯标准库生成带 ground truth
 
 1. **LangGraph 适配层未用真库验证**：`core/agent_langgraph.py` 是自实现的等价状态机，
    API 形状对齐 LangGraph，但从未安装过真实 langgraph 库跑通。主力引擎是 `core/agent.py`。
-2. **Dockerfile 未在本机构建过**：无 Docker 环境，逻辑经过审阅但首次构建可能需要调整。
+2. CPU Docker 镜像已验证默认健康检查、离线 CLI 与跨容器轨迹回放；跨主机部署待验证。
 3. **内置语料是自造的**：为让仓库开箱可跑而编写，不是真实业务数据。
 4. **`agent_langgraph` 与记忆层的向量检索路径**未接真实嵌入模型（用桩验证契约）。
 5. 真机 demo 需要 DeepSeek API Key，CI 不覆盖真实模型行为。

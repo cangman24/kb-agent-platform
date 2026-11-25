@@ -181,3 +181,17 @@ jobs:
             exit 1
           fi
           echo "✓ 未发现硬编码密钥"
+
+
+  container-smoke:
+    name: 容器构建与离线冒烟
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: 构建运行时镜像
+        run: docker build -t kb-agent-platform:ci .
+      - name: 核对运行依赖与本地输入
+        run: |
+          docker run --rm --network none --entrypoint python kb-agent-platform:ci -c 'import os; from pathlib import Path; from kb_agent.app import build_kb_index; index = build_kb_index(); assert os.getuid() != 0; assert len(index.chunks) > 0; assert not Path(".env").exists(); print("knowledge chunks", len(index.chunks))'
+      - name: 离线 CLI
+        run: docker run --rm --network none --entrypoint python kb-agent-platform:ci -m kb_agent.cli --offline "查一下工单复核流程"
